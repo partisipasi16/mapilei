@@ -50,6 +50,7 @@ select:disabled,input:disabled{background:#eef2f1;cursor:not-allowed;color:#8a9a
 .tabs{display:flex;gap:6px;margin:14px 0}
 .tabs button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 2px;border:1.5px solid var(--c);color:var(--c);background:#fff;border-radius:10px;font:600 12px inherit;font-family:inherit;cursor:pointer}
 .tabs button.on{background:var(--c);color:#fff}.tabs button[hidden]{display:none}
+.dua{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .tl ol{display:flex;list-style:none;margin:0;padding:0 0 4px;min-width:max-content;width:100%}.tl li{flex:1;min-width:88px;text-align:center;position:relative}
 .tl .nm{display:block;font-size:12px;font-weight:600;line-height:1.2;height:32px;overflow:hidden;margin-bottom:6px}
 .tl b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;margin:0 auto;background:#d5e0de;color:#52666f;position:relative;z-index:1}
@@ -140,7 +141,7 @@ function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>
  $('#u').placeholder=r!='pusat'?'Nomor HP terdaftar':'Username';
  $('#lh').textContent=r!='pusat'?'Login pertama: Anda akan diminta membuat password sendiri.':'';
  $('#lf').classList.remove('hide');$('#rf').classList.add('hide');$('#lm').textContent=''}
-$('#tabs').onclick=e=>{const b=e.target.closest('button');b&&setRole(b.dataset.r)};setRole('pusat');
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(b){setRole(b.dataset.r);$('#u').focus()}};setRole('pusat');
 document.querySelectorAll('#tabs button').forEach(b=>{if(b.dataset.r=='petugas'||b.dataset.r=='user')b.hidden=true});
 (async()=>{const {data}=await sb.from('tahapan').select('*').in('akses',['petugas','warga']);const rs=(data||[]).filter(aktif),w=rs.some(t=>t.akses=='warga'),p=rs.some(t=>t.akses=='petugas');$('#tabs [data-r="user"]').hidden=!w;$('#tabs [data-r="petugas"]').hidden=!p||w})();
 setTimeout(()=>$('#splash').classList.add('out'),3200);setTimeout(()=>$('#splash').remove(),4300);
@@ -243,10 +244,10 @@ async function kel(A){const [l,p]=await counts(S);const tl=await getTl(S.kelurah
   <div><label>Waktu Awal (opsional)</label><input id="ja" type="time"></div><div><label>Waktu Akhir (opsional)</label><input id="jb" type="time"></div>
   <div style="grid-column:1/-1"><label>Akses login dibuka untuk</label><select id="tk"><option value="">Tidak ada</option><option value="petugas">Petugas</option><option value="warga">Warga</option></select></div></div>
   <button class="btn" id="tsv">Simpan</button> <button class="btn ghost hide" id="tcx">Batal</button><div class="msg" id="tm"></div><div class="scroll" id="tls"></div></div>
- <div class="pnl hide" id="p2"><h3 style="margin:2px 0 12px">Pendaftaran Calon</h3><div class="card"><label for="csel">RT/RW</label><select id="csel"></select></div>${calonCard('RW')}${calonCard('RT')}</div>
- <div class="card pnl hide" id="p3"><h3>Hasil Pemilihan</h3><label>RT/RW</label><select id="hsel"></select><div id="hres"></div></div>
+ <div class="pnl hide" id="p2"><h3 style="margin:2px 0 12px">Pendaftaran Calon</h3><div class="card"><div class="dua"><div><label for="crt">RT</label><select id="crt"></select></div><div><label for="crw">RW</label><select id="crw" disabled></select></div></div></div>${calonCard('RW')}${calonCard('RT')}</div>
+ <div class="card pnl hide" id="p3"><h3>Hasil Pemilihan</h3><div class="dua"><div><label for="hrt">RT</label><select id="hrt"></select></div><div><label for="hrw">RW</label><select id="hrw" disabled></select></div></div><div id="hres"></div></div>
  <div class="card pnl hide" id="pw"><h3>Data Warga</h3><div class="scroll" id="wg"></div></div></main>`;
- bindMenu(async i=>{show('p'+i);if(i==0){lp();$('#rt').focus()}if(i==1)lt();if(i==2){$('#csel').innerHTML=await ropts();loadCalon('RW');loadCalon('RT')}if(i==3){$('#hsel').innerHTML=await ropts();$('#hres').innerHTML=''}});
+ bindMenu(async i=>{show('p'+i);if(i==0){lp();$('#rt').focus()}if(i==1){lt();$('#tn').focus()}if(i==2){$('#crt').focus();await pair('c',()=>{loadCalon('RW');loadCalon('RT')});loadCalon('RW');loadCalon('RT')}if(i==3){$('#hrt').focus();await pair('h',showHasil);$('#hres').innerHTML=''}});
  $('#sel').onclick=()=>{show('pw');listWarga($('#wg'),{kelurahan:S.kelurahan},true)};
  // --- Registrasi petugas
  let rows=[],ed=null,lastRw='',hl=null;
@@ -283,16 +284,18 @@ async function kel(A){const [l,p]=await counts(S);const tl=await getTl(S.kelurah
   const was=ted;const q=ted?await sb.from('tahapan').update(r).eq('id',ted):await sb.from('tahapan').insert(r);
   m.className=q.error?'msg':'msg ok';m.textContent=q.error?q.error.message:(was?'Perubahan tersimpan.':'Tahapan tersimpan.');if(!q.error){treset();lt()}};
  // --- Hasil pemilihan
- const ropts=async()=>{const {data}=await sb.from('petugas').select('rt,rw').eq('kelurahan',S.kelurahan);const u=[...new Set((data||[]).map(r=>r.rt+'|'+r.rw))].sort((a,b)=>{const x=a.split('|'),y=b.split('|');return x[1].localeCompare(y[1])||x[0].localeCompare(y[0])});
-  return '<option value="">Pilih RT/RW</option>'+u.map(v=>{const x=v.split('|');return `<option value="${v}">RT ${x[0]} / RW ${x[1]}</option>`}).join('')};
- $('#hsel').onchange=async e=>{const [rt,rw]=e.target.value.split('|');if(!rw){$('#hres').innerHTML='';return}
+ const sel=q=>{const rt=$('#'+q+'rt').value,rw=$('#'+q+'rw').value;return rt&&rw?{rt,rw}:null};
+ const pair=async(q,cb)=>{const {data}=await sb.from('petugas').select('rt,rw').eq('kelurahan',S.kelurahan),d=data||[],rt=$('#'+q+'rt'),rw=$('#'+q+'rw');
+  rt.innerHTML=opts([...new Set(d.map(r=>r.rt))].sort());rw.innerHTML=opts([]);rw.disabled=true;
+  rt.onchange=()=>{rw.innerHTML=opts([...new Set(d.filter(r=>r.rt==rt.value).map(r=>r.rw))].sort());rw.disabled=!rt.value;cb()};rw.onchange=cb};
+ const showHasil=async()=>{const hh=sel('h');if(!hh){$('#hres').innerHTML='';return}const {rt,rw}=hh;
   const {data}=await sb.from('calon').select('*').eq('kelurahan',S.kelurahan).eq('rw',rw);const c=data||[];
   $('#hres').innerHTML=hasil('Calon Ketua RW '+rw,c.filter(x=>x.jenis=='RW'))+hasil('Calon Ketua RT '+rt,c.filter(x=>x.jenis=='RT'&&x.rt==rt))};
  // --- Pendaftaran calon (oleh Kelurahan)
- const cs=()=>{const v=$('#csel').value;if(!v)return null;const x=v.split('|');return {rt:x[0],rw:x[1]}};
+ const cs=()=>sel('c');
  const loadCalon=async j=>{const c=cs();if(!c){$('#l'+j).innerHTML='';return}let q=sb.from('calon').select('*').eq('kelurahan',S.kelurahan).eq('jenis',j).eq('rw',c.rw);if(j=='RT')q=q.eq('rt',c.rt);const {data}=await q.order('created_at');
   $('#l'+j).innerHTML=(data||[]).map(x=>`<div class="cd"><img src="${esc(x.foto_url)}" alt=""><div style="flex:1;min-width:0"><b>${esc(x.nama)}</b><br><small>${esc(x.pekerjaan||'')}</small></div><button class="btn del sm" data-x="${x.id}" data-j="${j}" data-n="${esc(x.nama)}">Hapus</button></div>`).join('')};
- $('#p2').onchange=e=>{if(e.target.id=='csel'){loadCalon('RW');loadCalon('RT');return}if(e.target.type!='file')return;const j=e.target.id.slice(1),f=e.target.files[0],pv=$('#pv'+j);if(f){pv.src=URL.createObjectURL(f);pv.classList.remove('hide')}else pv.classList.add('hide')};
+ $('#p2').onchange=e=>{if(e.target.type!='file')return;const j=e.target.id.slice(1),f=e.target.files[0],pv=$('#pv'+j);if(f){pv.src=URL.createObjectURL(f);pv.classList.remove('hide')}else pv.classList.add('hide')};
  $('#p2').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.x){askConfirm('Hapus calon?',b.dataset.n+' akan dihapus dari daftar.',async()=>{await sb.from('calon').delete().eq('id',b.dataset.x);loadCalon(b.dataset.j)});return}
   const j=b.dataset.s;if(!j)return;const c=cs(),m=$('#ms'+j),g=i=>$('#'+i+j).value.trim(),f=$('#f'+j).files[0];m.className='msg';
@@ -333,6 +336,7 @@ async function petugas(A){const [l,p]=await counts(S);const tl=await getTl(S.kel
  <div class="card hide" id="pw"><h3>Data Warga RT ${S.rt} / RW ${S.rw}</h3><div class="scroll" id="wg"></div></div></main>`;
  $('#sel').onclick=()=>{const w=$('#pw');w.classList.toggle('hide');if(!w.classList.contains('hide')){listWarga($('#wg'),S,true);w.scrollIntoView({behavior:'smooth'})}};
  // --- Pendataan warga
+ $('#nkk').focus();
  const ml=$('#ml');ml.append(memRow());$('#add').onclick=()=>ml.append(memRow());
  $('#sv').onclick=async()=>{const m=$('#m');m.className='msg';const nkk=$('#nkk').value.trim();
   const ang=[...ml.children].map(d=>({nkk,nik:d.querySelector('.nik').value.trim(),nama:d.querySelector('.nama').value.trim(),jk:d.querySelector('.jk').value,hubungan:d.querySelector('.hub').value,tempat_lahir:d.querySelector('.tl').value.trim(),tgl_lahir:d.querySelector('.tg').value||null,pekerjaan:d.querySelector('.pk').value.trim()}));
