@@ -5,7 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
-:root{--ink:#10304a;--teal:#1b7f7c;--gold:#eaa63c;--paper:#f2f6f5;--card:#fff;--line:#d5e0de;--txt:#16262f;--bg:linear-gradient(135deg,#0b2a43,#1b7f7c)}
+:root{--ink:#0f4a30;--teal:#1d6b45;--gold:#eaa63c;--paper:#f2f6f5;--card:#fff;--line:#d5e0de;--txt:#16262f;--bg:linear-gradient(135deg,#0a3322,#1d6b45)}
 *{box-sizing:border-box}body{margin:0;font:16px/1.5 'Instrument Sans',system-ui,sans-serif;background:var(--paper);color:var(--txt)}
 h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
 .abs{background:var(--bg);position:relative;overflow:hidden}
@@ -20,8 +20,6 @@ h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
 #login{min-height:100vh;display:grid;place-items:center;padding:20px}
 .box{width:100%;max-width:440px;background:var(--card);border-radius:14px;padding:24px;box-shadow:0 10px 40px #0b2a4333}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:16px 0}
-.tabs button{padding:10px 6px;border:1.5px solid var(--line);background:#fff;border-radius:8px;font:600 14px inherit;font-family:inherit;cursor:pointer}
-.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
 input,select{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font:inherit;background:#fff}
 input:focus,select:focus,button:focus-visible{outline:3px solid #eaa63c88;outline-offset:1px}
@@ -36,10 +34,23 @@ main{max-width:900px;margin:0 auto;padding:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
 .stat{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .legend span{display:block;margin:4px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px}
-.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-.menu button{padding:16px;border:1.5px solid var(--ink);background:#fff;border-radius:10px;font:600 15px inherit;font-family:inherit;cursor:pointer;text-align:left}
-.menu button.on{background:var(--ink);color:#fff}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.tabs button{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 6px;border:1.5px solid var(--c);color:var(--c);background:#fff;border-radius:8px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--c);color:#fff}
+.lg{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;margin:0 auto 8px;box-shadow:0 0 0 3px #1d6b4533}.lg img,.lg svg{width:80%;height:80%;object-fit:contain}
+.div{display:flex;align-items:center;gap:12px;color:#52666f;font-size:14px;margin:4px 0}.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
+.menu{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.menu button{background:none;border:0;padding:6px 0;font:600 13px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px}
+.menu button i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--c);color:#fff}.menu button i svg{width:28px;height:28px}.menu button.on i{outline:3px solid var(--gold);outline-offset:2px}
+.sm{padding:5px 10px;font-size:13px;margin:0 4px 0 0}.btn.del{background:#b3261e;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.tabs button{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 6px;border:1.5px solid var(--c);color:var(--c);background:#fff;border-radius:8px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--c);color:#fff}
+.lg{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;margin:0 auto 8px;box-shadow:0 0 0 3px #1d6b4533}.lg img,.lg svg{width:80%;height:80%;object-fit:contain}
+.div{display:flex;align-items:center;gap:12px;color:#52666f;font-size:14px;margin:4px 0}.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
+.menu{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.menu button{background:none;border:0;padding:6px 0;font:600 13px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px}
+.menu button i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--c);color:#fff}.menu button i svg{width:28px;height:28px}.menu button.on i{outline:3px solid var(--gold);outline-offset:2px}
+.sm{padding:5px 10px;font-size:13px;margin:0 4px 0 0}.btn.del{background:#b3261e;color:#fff}
+.grid2{grid-template-columns:1fr}}
 .mem{border:1px dashed var(--teal);border-radius:10px;padding:4px 12px 14px;margin-top:12px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
 .scroll{overflow-x:auto}.hide{display:none}
@@ -51,19 +62,28 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
   <g fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"><circle cx="120" cy="100" r="90"/><circle cx="120" cy="100" r="150"/><circle cx="700" cy="520" r="120"/><circle cx="700" cy="520" r="200"/><path d="M-20 420q200-120 400 0t440-40"/><path d="M-20 460q200-120 400 0t440-40"/></g>
   <g fill="#eaa63c" fill-opacity=".35"><circle cx="680" cy="90" r="14"/><circle cx="90" cy="500" r="10"/><rect x="560" y="300" width="26" height="26" transform="rotate(25 573 313)"/></g>
  </svg>
- <div id="logo"><img src="logo.png" alt="Logo Klik Foto" onerror="this.outerHTML='<svg viewBox=&quot;0 0 64 64&quot;><rect x=&quot;8&quot; y=&quot;22&quot; width=&quot;48&quot; height=&quot;32&quot; rx=&quot;5&quot; fill=&quot;#10304a&quot;/><rect x=&quot;22&quot; y=&quot;8&quot; width=&quot;20&quot; height=&quot;22&quot; rx=&quot;2&quot; fill=&quot;#eaa63c&quot; transform=&quot;rotate(-8 32 19)&quot;/><circle cx=&quot;32&quot; cy=&quot;38&quot; r=&quot;8&quot; fill=&quot;#1b7f7c&quot;/></svg>'"></div>
+ <div id="logo"><img src="logo.png" alt="Logo Klik Foto" onerror="fb(this)"></div>
  <footer>Platform digital pendataan untuk pemilihan Ketua RT dan Ketua RW tingkat Kelurahan</footer>
 </div>
 
 <section id="login" class="abs">
  <svg class="bgart" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="2"><circle cx="700" cy="80" r="130"/><circle cx="80" cy="540" r="160"/></g></svg>
  <div class="box" style="position:relative">
-  <h2>Masuk</h2><div class="hint">Pemilihan Ketua RT &amp; RW</div>
+  <div class="lg"><img src="logo.png" alt="Logo" onerror="fb(this)"></div>
+  <div class="div">Silakan Login</div>
   <div class="tabs" id="tabs"></div>
-  <label for="u">Username</label><input id="u" autocomplete="username" inputmode="text">
-  <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
-  <div class="hint" id="lh"></div>
-  <button class="btn alt" id="go" style="width:100%">Masuk</button>
+  <form id="lf" novalidate>
+   <label for="u">Username</label><input id="u" autocomplete="username">
+   <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
+   <div class="hint" id="lh"></div>
+   <button class="btn alt" id="go" type="submit" style="width:100%">Masuk</button>
+  </form>
+  <form id="rf" class="hide" novalidate>
+   <div class="hint" id="rh"></div>
+   <label for="np">Password baru</label><input id="np" type="password" autocomplete="new-password">
+   <label for="np2">Ulangi password</label><input id="np2" type="password" autocomplete="new-password">
+   <button class="btn alt" type="submit" style="width:100%">Buat Akun &amp; Masuk</button>
+  </form>
   <div class="msg" id="lm" role="alert"></div>
  </div>
 </section>
@@ -71,7 +91,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 
 <script>
 // ====== ISI DENGAN DATA PROYEK SUPABASE ANDA ======
-const SB_URL='https://vuzxyufjljhddkvkqdlz.supabase.co', SB_KEY='sb_publishable_9cXg0KDz5TYfZMIzx_sFTg_cYvZTb0C';
+const SB_URL='https://GANTI-PROJECT.supabase.co', SB_KEY='GANTI-ANON-KEY';
 // ==================================================
 const sb=supabase.createClient(SB_URL,SB_KEY);
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -82,28 +102,42 @@ const opts=(a,ph)=>`<option value="">${ph||'Pilih'}</option>`+a.map(x=>`<option>
 const HUB=['Istri','Anak Kandung','Anak Tiri','Orangtua','Saudara Kandung','Famili Lain'];
 let role='pusat',S=null;
 const ROLES={pusat:'Admin Pusat',kel:'Admin Kelurahan',petugas:'Admin Petugas',user:'User'};
-$('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button data-r="${k}" class="${k==role?'on':''}">${v}</button>`).join('');
+const COL={pusat:'#c0392b',kel:'#1f6fb2',petugas:'#d9822b',user:'#7b3fa0'};
+const IC={pusat:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',kel:'<path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/>',petugas:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
+const ic=(p,z=18)=>`<svg viewBox="0 0 24 24" width="${z}" height="${z}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+window.fb=i=>{i.outerHTML='<svg viewBox="0 0 64 64"><rect x="8" y="22" width="48" height="32" rx="5" fill="#0f4a30"/><rect x="22" y="8" width="20" height="22" rx="2" fill="#eaa63c" transform="rotate(-8 32 19)"/><circle cx="32" cy="38" r="8" fill="#1d6b45"/></svg>'};
+$('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button type="button" data-r="${k}" style="--c:${COL[k]}">${ic(IC[k])}${v}</button>`).join('');
 function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.r==r));
- $('#u').placeholder=r=='pusat'||r=='user'?'Username':'Nomor HP terdaftar';
- $('#lh').textContent=r=='kel'||r=='petugas'?'Login pertama: password yang Anda isi akan menjadi password akun Anda.':'';$('#lm').textContent=''}
-$('#tabs').onclick=e=>e.target.dataset.r&&setRole(e.target.dataset.r);setRole('pusat');
+ $('#u').placeholder=r=='kel'||r=='petugas'?'Nomor HP terdaftar':'Username';
+ $('#lh').textContent=r=='kel'||r=='petugas'?'Login pertama: Anda akan diminta membuat password sendiri.':'';
+ $('#lf').classList.remove('hide');$('#rf').classList.add('hide');$('#lm').textContent=''}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');b&&setRole(b.dataset.r)};setRole('pusat');
 setTimeout(()=>$('#splash').classList.add('out'),3200);setTimeout(()=>$('#splash').remove(),4300);
 
-$('#go').onclick=async()=>{const u=$('#u').value.trim(),p=$('#p').value,m=$('#lm');m.textContent='';
+let pend=null;
+$('#lf').onsubmit=async e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value,m=$('#lm');m.textContent='';
  if(!u||!p){m.textContent='Isi username dan password.';return}
- if(role=='pusat'){if(u=='rt09.bgy'&&p=='160616'){S={role};return render()}m.textContent='Username atau password salah.';return}
- if(role=='user'){m.textContent='Login User belum aktif — menunggu rincian fitur.';return}
+ if(role=='pusat'){const {data,error}=await sb.rpc('login_pusat',{u,p});
+  if(error){m.textContent='Gagal terhubung: '+error.message;return}
+  if(data===true){S={role};return render()}m.textContent='Username atau password salah.';return}
+ if(role=='user'){m.textContent='Login User belum aktif, menunggu rincian fitur.';return}
  const tb=role=='kel'?'kelurahan_admin':'petugas';
  const {data,error}=await sb.from(tb).select('*').eq('hp',u).maybeSingle();
  if(error){m.textContent='Gagal terhubung: '+error.message;return}
  if(!data){m.textContent='Nomor HP belum diregistrasi.';return}
- const h=await hash(p);
- if(!data.pass_hash){await sb.from(tb).update({pass_hash:h}).eq('hp',u)}else if(data.pass_hash!==h){m.textContent='Password salah.';return}
+ if(!data.pass_hash){pend={tb,data};$('#rh').textContent='Ini login pertama untuk '+u+'. Buat password baru Anda untuk mengaktifkan akun.';$('#lf').classList.add('hide');$('#rf').classList.remove('hide');$('#np').focus();return}
+ if(data.pass_hash!==await hash(p)){m.textContent='Password salah.';return}
  S={role,...data};render()};
+$('#rf').onsubmit=async e=>{e.preventDefault();const a=$('#np').value,m=$('#lm');m.textContent='';
+ if(a.length<6){m.textContent='Password minimal 6 karakter.';return}
+ if(a!==$('#np2').value){m.textContent='Ulangi password tidak sama.';return}
+ const {error}=await sb.from(pend.tb).update({pass_hash:await hash(a)}).eq('hp',pend.data.hp).is('pass_hash',null);
+ if(error){m.textContent=error.message;return}
+ S={role,...pend.data};render()};
 
 function donut(l,pr){const t=l+pr,C=251.33,a=t?l/t*C:0;
- return `<svg width="150" height="150" viewBox="0 0 100 100" role="img" aria-label="Laki-laki ${l}, perempuan ${pr}"><circle cx="50" cy="50" r="40" fill="none" stroke="#e7a0b8" stroke-width="16"/><circle cx="50" cy="50" r="40" fill="none" stroke="#1b7f7c" stroke-width="16" stroke-dasharray="${a} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#16262f">${t}</text><text x="50" y="62" text-anchor="middle" font-size="7" fill="#52666f">warga</text></svg>
- <div class="legend"><span><i class="dot" style="background:#1b7f7c"></i>Laki-laki: <b>${l}</b></span><span><i class="dot" style="background:#e7a0b8"></i>Perempuan: <b>${pr}</b></span></div>`}
+ return `<svg width="150" height="150" viewBox="0 0 100 100" role="img" aria-label="Laki-laki ${l}, perempuan ${pr}"><circle cx="50" cy="50" r="40" fill="none" stroke="#e7a0b8" stroke-width="16"/><circle cx="50" cy="50" r="40" fill="none" stroke="#1d6b45" stroke-width="16" stroke-dasharray="${a} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#16262f">${t}</text><text x="50" y="62" text-anchor="middle" font-size="7" fill="#52666f">warga</text></svg>
+ <div class="legend"><span><i class="dot" style="background:#1d6b45"></i>Laki-laki: <b>${l}</b></span><span><i class="dot" style="background:#e7a0b8"></i>Perempuan: <b>${pr}</b></span></div>`}
 const art='<svg class="bgart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="2"><circle cx="720" cy="40" r="90"/><circle cx="720" cy="40" r="140"/><path d="M-20 150q200-90 400 0t440-30"/></g></svg>';
 const head=(t,s)=>`<header class="top abs">${art}<div class="row"><div><small>${s}</small><h1>${t}</h1></div><button class="btn ghost" style="margin:0" onclick="location.reload()">Keluar</button></div></header>`;
 const form=(id,h)=>`<div class="card hide" id="${id}">${h}</div>`;
@@ -113,29 +147,40 @@ async function render(){$('#login').remove();const A=$('#app');A.classList.remov
  if(S.role=='pusat')return pusat(A);if(S.role=='kel')return kel(A);return petugas(A)}
 
 async function pusat(A){
- A.innerHTML=head('Admin Pusat','Registrasi petugas kelurahan')+`<main><div class="card"><h3>Registrasi Petugas Kelurahan</h3><div class="grid2">
+ A.innerHTML=head('Admin Pusat','Registrasi Admin Kelurahan')+`<main><div class="card"><h3 id="ft">Registrasi Admin Kelurahan</h3><div class="grid2">
  <div><label>Kota/Kabupaten</label><select id="k">${opts(['Kota Kendari','Lainnya...'])}</select></div>
  <div><label>Kecamatan</label><select id="kc">${opts(Object.keys(KEC))}</select></div>
  <div><label>Kelurahan</label><select id="kl">${opts([])}</select></div>
  <div><label>No HP (username)</label><input id="hp" inputmode="tel"></div></div>
- <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div></div>
- <div class="card"><h3>Petugas terdaftar</h3><div class="scroll" id="ls"></div></main>`;
- $('#kc').onchange=e=>$('#kl').innerHTML=opts(KEC[e.target.value]||[],(KEC[e.target.value]||[]).length?'Pilih':'(belum tersedia)');
- const load=async()=>{const {data}=await sb.from('kelurahan_admin').select('*').order('created_at',{ascending:false});
-  $('#ls').innerHTML='<table><tr><th>HP</th><th>Kelurahan</th><th>Kecamatan</th><th>Status</th></tr>'+(data||[]).map(r=>`<tr><td>${esc(r.hp)}</td><td>${esc(r.kelurahan)}</td><td>${esc(r.kecamatan)}</td><td>${r.pass_hash?'Aktif':'Belum login'}</td></tr>`).join('')+'</table>'};
+ <button class="btn" id="sv">Simpan</button> <button class="btn ghost hide" id="cx">Batal</button><div class="msg" id="m"></div></div>
+ <div class="card"><h3>Admin Kelurahan Terdaftar</h3><div class="scroll" id="ls"></div></div></main>`;
+ let rows=[],ed=null;
+ const kl=v=>{const a=KEC[v]||[];$('#kl').innerHTML=opts(a,a.length?'Pilih':'(belum tersedia)')};
+ $('#kc').onchange=e=>kl(e.target.value);
+ const reset=()=>{ed=null;['k','kc','hp'].forEach(i=>$('#'+i).value='');kl('');$('#sv').textContent='Simpan';$('#cx').classList.add('hide');$('#ft').textContent='Registrasi Admin Kelurahan'};
+ $('#cx').onclick=()=>{reset();$('#m').textContent=''};
+ const load=async()=>{const {data}=await sb.from('kelurahan_admin').select('*').order('created_at',{ascending:false});rows=data||[];
+  $('#ls').innerHTML='<table><tr><th>HP</th><th>Kelurahan</th><th>Kecamatan</th><th>Status</th><th>Aksi</th></tr>'+rows.map((r,i)=>`<tr><td>${esc(r.hp)}</td><td>${esc(r.kelurahan)}</td><td>${esc(r.kecamatan)}</td><td>${r.pass_hash?'Aktif':'Belum login'}</td><td style="white-space:nowrap"><button class="btn alt sm" data-e="${i}">Edit</button><button class="btn del sm" data-d="${i}">Hapus</button></td></tr>`).join('')+'</table>'};
+ $('#ls').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const m=$('#m');
+  if(b.dataset.e!=null){const r=rows[b.dataset.e];ed=r.hp;$('#k').value=r.kota;$('#kc').value=r.kecamatan;kl(r.kecamatan);$('#kl').value=r.kelurahan;$('#hp').value=r.hp;
+   $('#sv').textContent='Perbarui';$('#cx').classList.remove('hide');$('#ft').textContent='Edit Admin Kelurahan';m.textContent='';scrollTo({top:0,behavior:'smooth'})}
+  else if(b.dataset.d!=null){const r=rows[b.dataset.d];if(!confirm('Hapus admin kelurahan '+r.hp+' ('+r.kelurahan+')?'))return;
+   const {error}=await sb.from('kelurahan_admin').delete().eq('hp',r.hp);m.className=error?'msg':'msg ok';m.textContent=error?error.message:'Admin kelurahan dihapus.';if(!error){if(ed==r.hp)reset();load()}}};
  $('#sv').onclick=async()=>{const r={kota:$('#k').value,kecamatan:$('#kc').value,kelurahan:$('#kl').value,hp:$('#hp').value.trim()},m=$('#m');
   if(Object.values(r).some(v=>!v)){m.className='msg';m.textContent='Lengkapi semua isian.';return}
-  const {error}=await sb.from('kelurahan_admin').insert(r);m.className=error?'msg':'msg ok';m.textContent=error?error.message:'Petugas kelurahan tersimpan.';if(!error){$('#hp').value='';load()}};
+  let q;if(ed){if(r.hp!=ed)r.pass_hash=null;q=await sb.from('kelurahan_admin').update(r).eq('hp',ed)}else q=await sb.from('kelurahan_admin').insert(r);
+  m.className=q.error?'msg':'msg ok';m.textContent=q.error?q.error.message:(ed?'Perubahan tersimpan.':'Admin kelurahan tersimpan.');if(!q.error){reset();load()}};
  load()}
 
 async function counts(f){let q=sb.from('anggota').select('jk,keluarga!inner(kelurahan,rw,rt)',{count:'exact'});
  q=q.eq('keluarga.kelurahan',f.kelurahan);if(f.rw)q=q.eq('keluarga.rw',f.rw).eq('keluarga.rt',f.rt);
  const {data}=await q;const d=data||[];return [d.filter(x=>x.jk=='L').length,d.filter(x=>x.jk=='P').length]}
 
+const MENU=[['Registrasi Petugas','<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/><path d="M19 8v6M16 11h6"/>','#1f6fb2'],['Pendataan','<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/>','#d9822b'],['Pemilihan','<rect x="3" y="12" width="18" height="9" rx="2"/><path d="M8 12V5l4-2 4 2v7"/><path d="M10 8h4"/>','#7b3fa0'],['Hasil Pemilihan','<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>','#c0392b']];
 async function kel(A){const [l,p]=await counts(S);
  A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'Kec. '+esc(S.kecamatan)+' · '+esc(S.kota))+`<main>
  <div class="card"><div class="stat">${donut(l,p)}</div><button class="btn alt" id="sel">Selengkapnya</button></div>
- <div class="menu card" style="padding:12px">${['Registrasi Petugas','Pendataan','Pemilihan','Hasil Pemilihan'].map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div>
+ <div class="card"><h3 style="margin-bottom:12px">Fitur Utama</h3><div class="menu">${MENU.map(([t,k,c],i)=>`<button data-i="${i}" style="--c:${c}"><i>${ic(k,28)}</i>${t}</button>`).join('')}</div></div>
  <div class="card pnl hide" id="p0"><h3>Registrasi Petugas RT/RW</h3><div class="grid2">
   <div><label>RW</label><select id="rw">${opts(NUM(20))}</select></div><div><label>RT</label><select id="rt">${opts(NUM(20))}</select></div>
   <div><label>Nomor HP</label><input id="hp" inputmode="tel"></div><div><label>Nama Petugas</label><input id="nm"></div>
@@ -145,7 +190,7 @@ async function kel(A){const [l,p]=await counts(S);
  <div class="card pnl hide" id="p2"><h3>Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
  <div class="card pnl hide" id="p3"><h3>Hasil Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
  <div class="card pnl hide" id="pw"><h3>Data Warga</h3><p class="hint">Menunggu rincian data. Sementara: daftar anggota keluarga.</p><div class="scroll" id="wg"></div></div></main>`;
- document.querySelector('.menu').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('on',b==e.target));show('p'+i);if(i==0)lp();if(i==1)lk()};
+ document.querySelector('.menu').onclick=e=>{const bt=e.target.closest('button');if(!bt)return;const i=bt.dataset.i;document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('on',b==bt));show('p'+i);if(i==0)lp();if(i==1)lk()};
  const lp=async()=>{const {data}=await sb.from('petugas').select('*').eq('kelurahan',S.kelurahan);$('#ls').innerHTML='<table><tr><th>RW/RT</th><th>Nama</th><th>HP</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nama)}</td><td>${esc(r.hp)}</td></tr>`).join('')+'</table>'};
  const lk=async()=>{const {data}=await sb.from('keluarga').select('*').eq('kelurahan',S.kelurahan).order('rw').order('rt');$('#kk').innerHTML='<table><tr><th>RW/RT</th><th>NKK</th><th>Kepala Keluarga</th><th>Alamat</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nkk)}</td><td>${esc(r.nama_kk)}</td><td>${esc(r.alamat)}</td></tr>`).join('')+'</table>'};
  $('#sel').onclick=async()=>{show('pw');const {data}=await sb.from('anggota').select('nik,nama,jk,hubungan,keluarga!inner(kelurahan,rw,rt)').eq('keluarga.kelurahan',S.kelurahan);
