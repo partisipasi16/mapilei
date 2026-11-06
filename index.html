@@ -129,7 +129,7 @@ const NUM=n=>Array.from({length:n},(_,i)=>String(i+1).padStart(2,'0'));
 const opts=(a,ph)=>`<option value="">${ph||'Pilih'}</option>`+a.map(x=>`<option>${esc(x)}</option>`).join('');
 const HUB=['Istri','Anak Kandung','Anak Tiri','Orangtua','Saudara Kandung','Famili Lain'];
 let role='pusat',S=null;
-const ROLES={pusat:'Admin',kel:'Kelurahan',petugas:'Petugas',user:'Warga'};
+const ROLES={pusat:'Admin',kel:'Kelurahan',petugas:'Pendata',user:'Warga'};
 const COL={pusat:'#c0392b',kel:'#1f6fb2',petugas:'#d9822b',user:'#7b3fa0'};
 const IC={pusat:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',kel:'<path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/>',petugas:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
 const ic=(p,z=18)=>`<svg viewBox="0 0 24 24" width="${z}" height="${z}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
@@ -222,13 +222,16 @@ async function counts(f,byRt=true){const c=async jk=>{let q=sb.from('anggota').s
 function fmtD(d){const x=d.split('-');return x[2]+'/'+x[1]}
 function dt(d,j,end){return new Date(d+'T'+(j?j.slice(0,5)+':00':(end?'23:59:59':'00:00:00')))}
 function aktif(t){const n=new Date();return n>=dt(t.tgl_awal,t.jam_awal)&&n<=dt(t.tgl_akhir,t.jam_akhir,1)}
-function kind(t){const n=(t.nama||'').toLowerCase();return n.includes('pendata')?'pendataan':n.includes('calon')?'pencalonan':n.includes('ilih')?'pemilihan':''}
+function kind(t){const n=(t.nama||'').toLowerCase();return n.includes('data')?'pendataan':/calon|kandidat/.test(n)?'pencalonan':/ilih|voting|coblos/.test(n)?'pemilihan':''}
 const UN={pendata:'pendataan',pendataan:'pendataan',pencalonan:'pencalonan',pemilihan:'pemilihan'},HASIL_JAM=24,TERPILIH_JAM=72;
 function tStart(t){return dt(t.tgl_awal,t.jam_awal)}
 function tEnd(t){return dt(t.tgl_akhir,t.jam_akhir,1)}
+function curKinds(rows){const n=new Date();let r=rows.filter(t=>n>=tStart(t)&&n<=tEnd(t));
+ if(!r.length){const st=rows.filter(t=>n>=tStart(t)).sort((a,b)=>tStart(a)-tStart(b));if(st.length)r=[st[st.length-1]]}
+ return new Set(r.map(kind).filter(Boolean))}
 function entered(rows,k){const n=new Date();return rows.some(t=>kind(t)==k&&n>=tStart(t))}
 function openRole(rows,r){const n=new Date();
- if(r=='petugas')return rows.some(t=>kind(t)=='pendataan'&&aktif(t))&&!entered(rows,'pemilihan');
+ if(r=='petugas')return rows.some(t=>kind(t)=='pendataan'&&aktif(t));
  return rows.some(t=>kind(t)=='pemilihan'&&n>=tStart(t)&&n<=new Date(tEnd(t).getTime()+TERPILIH_JAM*36e5))}
 async function roleOpen(kel,r){return openRole(await getTl(kel),r)}
 const getTl=async k=>{const {data}=await sb.from('tahapan').select('*').eq('kelurahan',k).order('tgl_awal').order('id');return data||[]};
@@ -239,8 +242,8 @@ function tlHtml(rows){if(!rows.length)return '<p class="hint">Timeline belum dit
   return `<li class="${cls}"><span class="nm">${esc(t.nama)}</span><b>${i+1}</b><small>${fmtD(t.tgl_awal)}–${fmtD(t.tgl_akhir)}</small>${n?`<i style="--f:${f}%"></i>`:''}</li>`}).join('')+'</ol></div>'}
 const tlCard=h=>`<div class="card"><h3 style="margin-bottom:12px">Timeline</h3><div id="tlc">${h}</div></div>`;
 const tlFlat=h=>`<section class="flat"><h3>Timeline</h3><div id="tlc">${h}</div></section>`;
-const menuHtml=(M,rows)=>`<section class="flat"><h3>Fitur Utama</h3><div class="menu" id="menu">${M.map(([k,t,i,c])=>`<button type="button" data-k="${k}" style="--c:${c}"${k=='tahapan'||entered(rows,UN[k])?'':' hidden'}><i>${ic(i,23)}</i>${t}</button>`).join('')}</div></section>`;
-const menuVis=rows=>document.querySelectorAll('#menu button').forEach(b=>{b.hidden=!(b.dataset.k=='tahapan'||entered(rows,UN[b.dataset.k]))});
+const menuHtml=(M,rows)=>{const cur=curKinds(rows);return `<section class="flat"><h3>Fitur Utama</h3><div class="menu" id="menu">${M.map(([k,t,i,c])=>`<button type="button" data-k="${k}" style="--c:${c}"${k=='tahapan'||cur.has(UN[k])?'':' hidden'}><i>${ic(i,23)}</i>${t}</button>`).join('')}</div></section>`};
+const menuVis=rows=>{const cur=curKinds(rows);document.querySelectorAll('#menu button').forEach(b=>{b.hidden=!(b.dataset.k=='tahapan'||cur.has(UN[b.dataset.k]))})};
 const bindMenu=cb=>{$('#menu').onclick=e=>{const bt=e.target.closest('button');if(!bt)return;document.querySelectorAll('#menu button').forEach(b=>b.classList.toggle('on',b==bt));cb(bt.dataset.k)}};
 async function listWarga(el,f,nik){el.innerHTML='Memuat...';let q=sb.from('anggota').select('nik,nama,jk,keluarga!inner(kelurahan,rw,rt)').eq('keluarga.kelurahan',f.kelurahan);if(f.rw){q=q.eq('keluarga.rw',f.rw);if(f.rt)q=q.eq('keluarga.rt',f.rt)}
  const {data}=await q.order('nama').limit(500);
