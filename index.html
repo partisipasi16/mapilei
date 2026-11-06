@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pemilihan Ketua RT &amp; RW</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--ink:#10304a;--teal:#1b7f7c;--gold:#eaa63c;--paper:#f2f6f5;--card:#fff;--line:#d5e0de;--txt:#16262f;--bg:linear-gradient(135deg,#0b2a43,#1b7f7c)}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 'Instrument Sans',system-ui,sans-serif;background:var(--paper);color:var(--txt)}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
+.abs{background:var(--bg);position:relative;overflow:hidden}
+.abs svg.bgart{position:absolute;inset:0;width:100%;height:100%}
+#splash{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:transform .9s cubic-bezier(.77,0,.18,1)}
+#splash.out{transform:translateX(100%)}
+#logo{position:relative;width:150px;height:150px;border-radius:50%;background:#fff;display:grid;place-items:center;animation:pop 1.4s ease-out both,pulse 2.4s 1.4s ease-in-out infinite}
+#logo img,#logo svg{width:80%;height:80%;object-fit:contain}
+@keyframes pop{from{transform:scale(.3) rotate(-90deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes pulse{50%{box-shadow:0 0 0 22px #ffffff18}}
+#splash footer{position:absolute;bottom:28px;padding:0 24px;text-align:center;font-size:14px;max-width:460px;opacity:.9}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{width:100%;max-width:440px;background:var(--card);border-radius:14px;padding:24px;box-shadow:0 10px 40px #0b2a4333}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:16px 0}
+.tabs button{padding:10px 6px;border:1.5px solid var(--line);background:#fff;border-radius:8px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
+input,select{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+input:focus,select:focus,button:focus-visible{outline:3px solid #eaa63c88;outline-offset:1px}
+.btn{background:var(--gold);color:#2b1c00;border:0;padding:11px 18px;border-radius:8px;font:600 15px inherit;font-family:inherit;cursor:pointer;margin-top:16px}
+.btn.alt{background:var(--ink);color:#fff}.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--txt)}
+.msg{margin-top:10px;font-size:14px;color:#b3261e;min-height:20px}.msg.ok{color:#18794e}
+.hint{font-size:13px;color:#52666f}
+header.top{padding:22px 20px 26px;color:#fff}
+header.top .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative}
+header.top small{opacity:.85}
+main{max-width:900px;margin:0 auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.stat{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.legend span{display:block;margin:4px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.menu button{padding:16px;border:1.5px solid var(--ink);background:#fff;border-radius:10px;font:600 15px inherit;font-family:inherit;cursor:pointer;text-align:left}
+.menu button.on{background:var(--ink);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.mem{border:1px dashed var(--teal);border-radius:10px;padding:4px 12px 14px;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto}.hide{display:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+
+<div id="splash" class="abs">
+ <svg class="bgart" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="2"><circle cx="120" cy="100" r="90"/><circle cx="120" cy="100" r="150"/><circle cx="700" cy="520" r="120"/><circle cx="700" cy="520" r="200"/><path d="M-20 420q200-120 400 0t440-40"/><path d="M-20 460q200-120 400 0t440-40"/></g>
+  <g fill="#eaa63c" fill-opacity=".35"><circle cx="680" cy="90" r="14"/><circle cx="90" cy="500" r="10"/><rect x="560" y="300" width="26" height="26" transform="rotate(25 573 313)"/></g>
+ </svg>
+ <div id="logo"><img src="logo.png" alt="Logo Klik Foto" onerror="this.outerHTML='<svg viewBox=&quot;0 0 64 64&quot;><rect x=&quot;8&quot; y=&quot;22&quot; width=&quot;48&quot; height=&quot;32&quot; rx=&quot;5&quot; fill=&quot;#10304a&quot;/><rect x=&quot;22&quot; y=&quot;8&quot; width=&quot;20&quot; height=&quot;22&quot; rx=&quot;2&quot; fill=&quot;#eaa63c&quot; transform=&quot;rotate(-8 32 19)&quot;/><circle cx=&quot;32&quot; cy=&quot;38&quot; r=&quot;8&quot; fill=&quot;#1b7f7c&quot;/></svg>'"></div>
+ <footer>Platform digital pendataan untuk pemilihan Ketua RT dan Ketua RW tingkat Kelurahan</footer>
+</div>
+
+<section id="login" class="abs">
+ <svg class="bgart" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="2"><circle cx="700" cy="80" r="130"/><circle cx="80" cy="540" r="160"/></g></svg>
+ <div class="box" style="position:relative">
+  <h2>Masuk</h2><div class="hint">Pemilihan Ketua RT &amp; RW</div>
+  <div class="tabs" id="tabs"></div>
+  <label for="u">Username</label><input id="u" autocomplete="username" inputmode="text">
+  <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
+  <div class="hint" id="lh"></div>
+  <button class="btn alt" id="go" style="width:100%">Masuk</button>
+  <div class="msg" id="lm" role="alert"></div>
+ </div>
+</section>
+<div id="app" class="hide"></div>
+
+<script>
+// ====== ISI DENGAN DATA PROYEK SUPABASE ANDA ======
+const SB_URL='https://GANTI-PROJECT.supabase.co', SB_KEY='GANTI-ANON-KEY';
+// ==================================================
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hash=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const KEC={Abeli:[],Baruga:[],Kadia:[],Kambu:[],Kendari:[],'Kendari Barat':[],Mandonga:[],Nambo:[],Poasia:[],Puuwatu:[],'Wua-Wua':['Anawai','Bonggoeya','Mataiwoi','Wua-Wua']};
+const NUM=n=>Array.from({length:n},(_,i)=>String(i+1).padStart(2,'0'));
+const opts=(a,ph)=>`<option value="">${ph||'Pilih'}</option>`+a.map(x=>`<option>${esc(x)}</option>`).join('');
+const HUB=['Istri','Anak Kandung','Anak Tiri','Orangtua','Saudara Kandung','Famili Lain'];
+let role='pusat',S=null;
+const ROLES={pusat:'Admin Pusat',kel:'Admin Kelurahan',petugas:'Admin Petugas',user:'User'};
+$('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button data-r="${k}" class="${k==role?'on':''}">${v}</button>`).join('');
+function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.r==r));
+ $('#u').placeholder=r=='pusat'||r=='user'?'Username':'Nomor HP terdaftar';
+ $('#lh').textContent=r=='kel'||r=='petugas'?'Login pertama: password yang Anda isi akan menjadi password akun Anda.':'';$('#lm').textContent=''}
+$('#tabs').onclick=e=>e.target.dataset.r&&setRole(e.target.dataset.r);setRole('pusat');
+setTimeout(()=>$('#splash').classList.add('out'),3200);setTimeout(()=>$('#splash').remove(),4300);
+
+$('#go').onclick=async()=>{const u=$('#u').value.trim(),p=$('#p').value,m=$('#lm');m.textContent='';
+ if(!u||!p){m.textContent='Isi username dan password.';return}
+ if(role=='pusat'){if(u=='rt09.bgy'&&p=='160616'){S={role};return render()}m.textContent='Username atau password salah.';return}
+ if(role=='user'){m.textContent='Login User belum aktif — menunggu rincian fitur.';return}
+ const tb=role=='kel'?'kelurahan_admin':'petugas';
+ const {data,error}=await sb.from(tb).select('*').eq('hp',u).maybeSingle();
+ if(error){m.textContent='Gagal terhubung: '+error.message;return}
+ if(!data){m.textContent='Nomor HP belum diregistrasi.';return}
+ const h=await hash(p);
+ if(!data.pass_hash){await sb.from(tb).update({pass_hash:h}).eq('hp',u)}else if(data.pass_hash!==h){m.textContent='Password salah.';return}
+ S={role,...data};render()};
+
+function donut(l,pr){const t=l+pr,C=251.33,a=t?l/t*C:0;
+ return `<svg width="150" height="150" viewBox="0 0 100 100" role="img" aria-label="Laki-laki ${l}, perempuan ${pr}"><circle cx="50" cy="50" r="40" fill="none" stroke="#e7a0b8" stroke-width="16"/><circle cx="50" cy="50" r="40" fill="none" stroke="#1b7f7c" stroke-width="16" stroke-dasharray="${a} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#16262f">${t}</text><text x="50" y="62" text-anchor="middle" font-size="7" fill="#52666f">warga</text></svg>
+ <div class="legend"><span><i class="dot" style="background:#1b7f7c"></i>Laki-laki: <b>${l}</b></span><span><i class="dot" style="background:#e7a0b8"></i>Perempuan: <b>${pr}</b></span></div>`}
+const art='<svg class="bgart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="2"><circle cx="720" cy="40" r="90"/><circle cx="720" cy="40" r="140"/><path d="M-20 150q200-90 400 0t440-30"/></g></svg>';
+const head=(t,s)=>`<header class="top abs">${art}<div class="row"><div><small>${s}</small><h1>${t}</h1></div><button class="btn ghost" style="margin:0" onclick="location.reload()">Keluar</button></div></header>`;
+const form=(id,h)=>`<div class="card hide" id="${id}">${h}</div>`;
+const show=id=>document.querySelectorAll('.pnl').forEach(x=>x.classList.toggle('hide',x.id!=id));
+
+async function render(){$('#login').remove();const A=$('#app');A.classList.remove('hide');
+ if(S.role=='pusat')return pusat(A);if(S.role=='kel')return kel(A);return petugas(A)}
+
+async function pusat(A){
+ A.innerHTML=head('Admin Pusat','Registrasi petugas kelurahan')+`<main><div class="card"><h3>Registrasi Petugas Kelurahan</h3><div class="grid2">
+ <div><label>Kota/Kabupaten</label><select id="k">${opts(['Kota Kendari','Lainnya...'])}</select></div>
+ <div><label>Kecamatan</label><select id="kc">${opts(Object.keys(KEC))}</select></div>
+ <div><label>Kelurahan</label><select id="kl">${opts([])}</select></div>
+ <div><label>No HP (username)</label><input id="hp" inputmode="tel"></div></div>
+ <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div></div>
+ <div class="card"><h3>Petugas terdaftar</h3><div class="scroll" id="ls"></div></main>`;
+ $('#kc').onchange=e=>$('#kl').innerHTML=opts(KEC[e.target.value]||[],(KEC[e.target.value]||[]).length?'Pilih':'(belum tersedia)');
+ const load=async()=>{const {data}=await sb.from('kelurahan_admin').select('*').order('created_at',{ascending:false});
+  $('#ls').innerHTML='<table><tr><th>HP</th><th>Kelurahan</th><th>Kecamatan</th><th>Status</th></tr>'+(data||[]).map(r=>`<tr><td>${esc(r.hp)}</td><td>${esc(r.kelurahan)}</td><td>${esc(r.kecamatan)}</td><td>${r.pass_hash?'Aktif':'Belum login'}</td></tr>`).join('')+'</table>'};
+ $('#sv').onclick=async()=>{const r={kota:$('#k').value,kecamatan:$('#kc').value,kelurahan:$('#kl').value,hp:$('#hp').value.trim()},m=$('#m');
+  if(Object.values(r).some(v=>!v)){m.className='msg';m.textContent='Lengkapi semua isian.';return}
+  const {error}=await sb.from('kelurahan_admin').insert(r);m.className=error?'msg':'msg ok';m.textContent=error?error.message:'Petugas kelurahan tersimpan.';if(!error){$('#hp').value='';load()}};
+ load()}
+
+async function counts(f){let q=sb.from('anggota').select('jk,keluarga!inner(kelurahan,rw,rt)',{count:'exact'});
+ q=q.eq('keluarga.kelurahan',f.kelurahan);if(f.rw)q=q.eq('keluarga.rw',f.rw).eq('keluarga.rt',f.rt);
+ const {data}=await q;const d=data||[];return [d.filter(x=>x.jk=='L').length,d.filter(x=>x.jk=='P').length]}
+
+async function kel(A){const [l,p]=await counts(S);
+ A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'Kec. '+esc(S.kecamatan)+' · '+esc(S.kota))+`<main>
+ <div class="card"><div class="stat">${donut(l,p)}</div><button class="btn alt" id="sel">Selengkapnya</button></div>
+ <div class="menu card" style="padding:12px">${['Registrasi Petugas','Pendataan','Pemilihan','Hasil Pemilihan'].map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div>
+ <div class="card pnl hide" id="p0"><h3>Registrasi Petugas RT/RW</h3><div class="grid2">
+  <div><label>RW</label><select id="rw">${opts(NUM(20))}</select></div><div><label>RT</label><select id="rt">${opts(NUM(20))}</select></div>
+  <div><label>Nomor HP</label><input id="hp" inputmode="tel"></div><div><label>Nama Petugas</label><input id="nm"></div>
+  <div><label>NIK</label><input id="nik" inputmode="numeric" maxlength="16"></div></div>
+  <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div><div class="scroll" id="ls"></div></div>
+ <div class="card pnl hide" id="p1"><h3>Pendataan</h3><div class="scroll" id="kk"></div></div>
+ <div class="card pnl hide" id="p2"><h3>Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
+ <div class="card pnl hide" id="p3"><h3>Hasil Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
+ <div class="card pnl hide" id="pw"><h3>Data Warga</h3><p class="hint">Menunggu rincian data. Sementara: daftar anggota keluarga.</p><div class="scroll" id="wg"></div></div></main>`;
+ document.querySelector('.menu').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('on',b==e.target));show('p'+i);if(i==0)lp();if(i==1)lk()};
+ const lp=async()=>{const {data}=await sb.from('petugas').select('*').eq('kelurahan',S.kelurahan);$('#ls').innerHTML='<table><tr><th>RW/RT</th><th>Nama</th><th>HP</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nama)}</td><td>${esc(r.hp)}</td></tr>`).join('')+'</table>'};
+ const lk=async()=>{const {data}=await sb.from('keluarga').select('*').eq('kelurahan',S.kelurahan).order('rw').order('rt');$('#kk').innerHTML='<table><tr><th>RW/RT</th><th>NKK</th><th>Kepala Keluarga</th><th>Alamat</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nkk)}</td><td>${esc(r.nama_kk)}</td><td>${esc(r.alamat)}</td></tr>`).join('')+'</table>'};
+ $('#sel').onclick=async()=>{show('pw');const {data}=await sb.from('anggota').select('nik,nama,jk,hubungan,keluarga!inner(kelurahan,rw,rt)').eq('keluarga.kelurahan',S.kelurahan);
+  $('#wg').innerHTML='<table><tr><th>NIK</th><th>Nama</th><th>JK</th><th>RW/RT</th></tr>'+(data||[]).map(r=>`<tr><td>${esc(r.nik)}</td><td>${esc(r.nama)}</td><td>${r.jk}</td><td>${r.keluarga.rw}/${r.keluarga.rt}</td></tr>`).join('')+'</table>'};
+ $('#sv').onclick=async()=>{const r={hp:$('#hp').value.trim(),nama:$('#nm').value.trim(),nik:$('#nik').value.trim(),rw:$('#rw').value,rt:$('#rt').value,kelurahan:S.kelurahan,created_by:S.hp},m=$('#m');
+  if(!r.hp||!r.nama||!r.rw||!r.rt||r.nik.length!=16){m.className='msg';m.textContent='Lengkapi isian; NIK harus 16 digit.';return}
+  const {error}=await sb.from('petugas').insert(r);m.className=error?'msg':'msg ok';m.textContent=error?error.message:'Petugas tersimpan.';if(!error)lp()}}
+
+function memRow(){const d=document.createElement('div');d.className='mem';d.innerHTML=`<div class="grid2">
+ <div><label>NIK</label><input class="nik" inputmode="numeric" maxlength="16"></div><div><label>Nama</label><input class="nama"></div>
+ <div><label>Jenis Kelamin</label><select class="jk"><option value="">Pilih</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+ <div><label>Hubungan dalam Keluarga</label><select class="hub">${opts(HUB)}</select></div>
+ <div><label>Tempat Lahir</label><input class="tl"></div><div><label>Tanggal Lahir</label><input class="tg" type="date"></div>
+ <div><label>Pekerjaan</label><input class="pk"></div></div>`;return d}
+
+async function petugas(A){const [l,p]=await counts(S);
+ A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'RW '+S.rw+' / RT '+S.rt)+`<main><div class="card"><div class="stat">${donut(l,p)}</div></div>
+ <div class="card"><h3>Pendataan Keluarga</h3><div class="grid2">
+ <div><label>NKK</label><input id="nkk" inputmode="numeric" maxlength="16"></div><div><label>Nama Kepala Keluarga</label><input id="nkp"></div>
+ <div><label>Alamat</label><input id="al"></div><div><label>No HP Keluarga</label><input id="hk" inputmode="tel"></div></div>
+ <h3 style="margin-top:18px">Anggota Keluarga</h3><div id="ml"></div>
+ <button class="btn ghost" id="add">+ Tambah anggota</button> <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div></div></main>`;
+ const ml=$('#ml');ml.append(memRow());$('#add').onclick=()=>ml.append(memRow());
+ $('#sv').onclick=async()=>{const m=$('#m');m.className='msg';const nkk=$('#nkk').value.trim();
+  const ang=[...ml.children].map(d=>({nkk,nik:d.querySelector('.nik').value.trim(),nama:d.querySelector('.nama').value.trim(),jk:d.querySelector('.jk').value,hubungan:d.querySelector('.hub').value,tempat_lahir:d.querySelector('.tl').value.trim(),tgl_lahir:d.querySelector('.tg').value||null,pekerjaan:d.querySelector('.pk').value.trim()}));
+  if(nkk.length!=16||!$('#nkp').value.trim()){m.textContent='NKK harus 16 digit dan Nama KK wajib diisi.';return}
+  if(ang.some(a=>a.nik.length!=16||!a.nama||!a.jk)){m.textContent='Setiap anggota wajib punya NIK 16 digit, nama, dan jenis kelamin.';return}
+  const k=await sb.from('keluarga').insert({nkk,nama_kk:$('#nkp').value.trim(),alamat:$('#al').value.trim(),hp:$('#hk').value.trim(),kelurahan:S.kelurahan,rw:S.rw,rt:S.rt,created_by:S.hp});
+  if(k.error){m.textContent=k.error.message;return}
+  const a=await sb.from('anggota').insert(ang);if(a.error){await sb.from('keluarga').delete().eq('nkk',nkk);m.textContent=a.error.message;return}
+  m.className='msg ok';m.textContent='Keluarga tersimpan.';petugas(A)}}
+</script></body></html>
