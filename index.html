@@ -42,6 +42,11 @@ main{max-width:900px;margin:0 auto;padding:18px}
 .menu button{background:none;border:0;padding:6px 0;font:600 13px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px}
 .menu button i{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--c);color:#fff}.menu button i svg{width:28px;height:28px}.menu button.on i{outline:3px solid var(--gold);outline-offset:2px}
 .sm{padding:5px 10px;font-size:13px;margin:0 4px 0 0}.btn.del{background:#b3261e;color:#fff}
+.pw{position:relative}.pw input{padding-right:46px}.eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:none;color:#52666f;cursor:pointer;display:grid;place-items:center}
+.exit{margin:0;flex:none;width:40px;height:40px;border-radius:10px;background:#ff2d2d45;border:1px solid #ff7a7a99;color:#fff;display:grid;place-items:center;cursor:pointer}
+.modal{position:fixed;inset:0;background:#000a;display:grid;place-items:center;z-index:20;padding:20px}.mb{background:#fff;border-radius:14px;padding:22px;max-width:340px;width:100%;text-align:center}.mb p{color:#52666f}
+.ttl{font-size:clamp(14px,4.4vw,19px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top .row>div:first-child{min-width:0;flex:1}.hd{position:relative;display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}.hd .legend{color:#fff}.hd .btn{margin:0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.tabs button{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 6px;border:1.5px solid var(--c);color:var(--c);background:#fff;border-radius:8px;font:600 14px inherit;font-family:inherit;cursor:pointer}
 .tabs button.on{background:var(--c);color:#fff}
 .lg{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;margin:0 auto 8px;box-shadow:0 0 0 3px #1d6b4533}.lg img,.lg svg{width:80%;height:80%;object-fit:contain}
@@ -74,15 +79,16 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
   <div class="tabs" id="tabs"></div>
   <form id="lf" novalidate>
    <label for="u">Username</label><input id="u" autocomplete="username">
-   <label for="p">Password</label><input id="p" type="password" autocomplete="current-password">
+   <label for="p">Password</label><div class="pw"><input id="p" type="password" autocomplete="current-password"><button type="button" class="eye" data-t="p" aria-label="Tampilkan password"></button></div>
    <div class="hint" id="lh"></div>
    <button class="btn alt" id="go" type="submit" style="width:100%">Masuk</button>
   </form>
   <form id="rf" class="hide" novalidate>
    <div class="hint" id="rh"></div>
-   <label for="np">Password baru</label><input id="np" type="password" autocomplete="new-password">
-   <label for="np2">Ulangi password</label><input id="np2" type="password" autocomplete="new-password">
+   <label for="np">Password baru</label><div class="pw"><input id="np" type="password" autocomplete="new-password"><button type="button" class="eye" data-t="np" aria-label="Tampilkan password"></button></div>
+   <label for="np2">Ulangi password</label><div class="pw"><input id="np2" type="password" autocomplete="new-password"><button type="button" class="eye" data-t="np2" aria-label="Tampilkan password"></button></div>
    <button class="btn alt" type="submit" style="width:100%">Buat Akun &amp; Masuk</button>
+   <button class="btn ghost" type="button" id="bk" style="width:100%">Kembali</button>
   </form>
   <div class="msg" id="lm" role="alert"></div>
  </div>
@@ -101,11 +107,21 @@ const NUM=n=>Array.from({length:n},(_,i)=>String(i+1).padStart(2,'0'));
 const opts=(a,ph)=>`<option value="">${ph||'Pilih'}</option>`+a.map(x=>`<option>${esc(x)}</option>`).join('');
 const HUB=['Istri','Anak Kandung','Anak Tiri','Orangtua','Saudara Kandung','Famili Lain'];
 let role='pusat',S=null;
-const ROLES={pusat:'Admin Pusat',kel:'Admin Kelurahan',petugas:'Admin Petugas',user:'User'};
+const ROLES={pusat:'Admin Pusat',kel:'Admin Kelurahan',petugas:'Admin Petugas',user:'User/Warga'};
 const COL={pusat:'#c0392b',kel:'#1f6fb2',petugas:'#d9822b',user:'#7b3fa0'};
 const IC={pusat:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',kel:'<path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/>',petugas:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>'};
 const ic=(p,z=18)=>`<svg viewBox="0 0 24 24" width="${z}" height="${z}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 window.fb=i=>{i.outerHTML='<svg viewBox="0 0 64 64"><rect x="8" y="22" width="48" height="32" rx="5" fill="#0f4a30"/><rect x="22" y="8" width="20" height="22" rx="2" fill="#eaa63c" transform="rotate(-8 32 19)"/><circle cx="32" cy="38" r="8" fill="#1d6b45"/></svg>'};
+const EXIT='<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>';
+const EYE='<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',EYEOFF='<path d="M3 3l18 18"/><path d="M10.6 5.1A9.7 9.7 0 0112 5c6 0 10 7 10 7a17 17 0 01-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s4 7 10 7c1.7 0 3.2-.4 4.5-1"/>';
+const pad=v=>/^\d{1,3}$/.test(v)?v.padStart(2,'0'):'';
+document.querySelectorAll('.eye').forEach(b=>b.innerHTML=ic(EYE,20));
+document.addEventListener('click',e=>{const b=e.target.closest('.eye');if(b){const i=$('#'+b.dataset.t),h=i.type=='password';i.type=h?'text':'password';b.innerHTML=ic(h?EYEOFF:EYE,20);b.setAttribute('aria-label',h?'Sembunyikan password':'Tampilkan password');return}
+ if(e.target.closest('#ex'))askExit()});
+document.addEventListener('input',e=>{if(e.target.classList.contains('num'))e.target.value=e.target.value.replace(/\D/g,'')});
+let inApp=false;
+function askExit(){if($('#xm'))return;const d=document.createElement('div');d.id='xm';d.className='modal';d.innerHTML='<div class="mb" role="dialog" aria-modal="true"><h3>Keluar dari akun?</h3><p>Anda akan kembali ke halaman login.</p><button class="btn ghost" id="xn">Batal</button> <button class="btn del" id="xy">Keluar</button></div>';document.body.append(d);$('#xn').onclick=()=>d.remove();$('#xy').onclick=()=>{inApp=false;location.reload()}}
+window.addEventListener('popstate',()=>{if(inApp){history.pushState({a:1},'');askExit()}});
 $('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button type="button" data-r="${k}" style="--c:${COL[k]}">${ic(IC[k])}${v}</button>`).join('');
 function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.r==r));
  $('#u').placeholder=r=='kel'||r=='petugas'?'Nomor HP terdaftar':'Username';
@@ -115,19 +131,24 @@ $('#tabs').onclick=e=>{const b=e.target.closest('button');b&&setRole(b.dataset.r
 setTimeout(()=>$('#splash').classList.add('out'),3200);setTimeout(()=>$('#splash').remove(),4300);
 
 let pend=null;
+const lookup=async u=>{const tb=role=='kel'?'kelurahan_admin':'petugas';const {data,error}=await sb.from(tb).select('*').eq('hp',u).maybeSingle();return {tb,data,error}};
+const firstLogin=(tb,data)=>{pend={tb,data};$('#rh').textContent='Login pertama untuk '+data.hp+'. Buat password baru, lalu ulangi sebagai konfirmasi.';$('#lm').textContent='';$('#lf').classList.add('hide');$('#rf').classList.remove('hide');$('#np').focus()};
+$('#bk').onclick=()=>setRole(role);
+$('#u').onchange=async()=>{if(role!='kel'&&role!='petugas')return;const u=$('#u').value.trim();if(!u)return;const r=await lookup(u);if(!r.error&&r.data&&!r.data.pass_hash)firstLogin(r.tb,r.data)};
 $('#lf').onsubmit=async e=>{e.preventDefault();const u=$('#u').value.trim(),p=$('#p').value,m=$('#lm');m.textContent='';
- if(!u||!p){m.textContent='Isi username dan password.';return}
- if(role=='pusat'){const {data,error}=await sb.rpc('login_pusat',{u,p});
+ if(!u){m.textContent='Isi username.';return}
+ if(role=='user'){m.textContent='Login User/Warga belum aktif, menunggu rincian fitur.';return}
+ if(role=='pusat'){if(!p){m.textContent='Isi password.';return}
+  const {data,error}=await sb.rpc('login_pusat',{u,p});
   if(error){m.textContent='Gagal terhubung: '+error.message;return}
   if(data===true){S={role};return render()}m.textContent='Username atau password salah.';return}
- if(role=='user'){m.textContent='Login User belum aktif, menunggu rincian fitur.';return}
- const tb=role=='kel'?'kelurahan_admin':'petugas';
- const {data,error}=await sb.from(tb).select('*').eq('hp',u).maybeSingle();
- if(error){m.textContent='Gagal terhubung: '+error.message;return}
- if(!data){m.textContent='Nomor HP belum diregistrasi.';return}
- if(!data.pass_hash){pend={tb,data};$('#rh').textContent='Ini login pertama untuk '+u+'. Buat password baru Anda untuk mengaktifkan akun.';$('#lf').classList.add('hide');$('#rf').classList.remove('hide');$('#np').focus();return}
- if(data.pass_hash!==await hash(p)){m.textContent='Password salah.';return}
- S={role,...data};render()};
+ const r=await lookup(u);
+ if(r.error){m.textContent='Gagal terhubung: '+r.error.message;return}
+ if(!r.data){m.textContent='Nomor HP belum diregistrasi.';return}
+ if(!r.data.pass_hash)return firstLogin(r.tb,r.data);
+ if(!p){m.textContent='Isi password.';return}
+ if(r.data.pass_hash!==await hash(p)){m.textContent='Password salah.';return}
+ S={role,...r.data};render()};
 $('#rf').onsubmit=async e=>{e.preventDefault();const a=$('#np').value,m=$('#lm');m.textContent='';
  if(a.length<6){m.textContent='Password minimal 6 karakter.';return}
  if(a!==$('#np2').value){m.textContent='Ulangi password tidak sama.';return}
@@ -135,15 +156,15 @@ $('#rf').onsubmit=async e=>{e.preventDefault();const a=$('#np').value,m=$('#lm')
  if(error){m.textContent=error.message;return}
  S={role,...pend.data};render()};
 
-function donut(l,pr){const t=l+pr,C=251.33,a=t?l/t*C:0;
- return `<svg width="150" height="150" viewBox="0 0 100 100" role="img" aria-label="Laki-laki ${l}, perempuan ${pr}"><circle cx="50" cy="50" r="40" fill="none" stroke="#e7a0b8" stroke-width="16"/><circle cx="50" cy="50" r="40" fill="none" stroke="#1d6b45" stroke-width="16" stroke-dasharray="${a} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="#16262f">${t}</text><text x="50" y="62" text-anchor="middle" font-size="7" fill="#52666f">warga</text></svg>
- <div class="legend"><span><i class="dot" style="background:#1d6b45"></i>Laki-laki: <b>${l}</b></span><span><i class="dot" style="background:#e7a0b8"></i>Perempuan: <b>${pr}</b></span></div>`}
+function donut(l,pr,z=150,lt=false){const t=l+pr,C=251.33,a=t?l/t*C:0,cL=lt?'#8fe0b0':'#1d6b45',cP=lt?'#f6a6c1':'#e7a0b8',x1=lt?'#fff':'#16262f',x2=lt?'#ffffffbb':'#52666f';
+ return `<svg width="${z}" height="${z}" viewBox="0 0 100 100" role="img" aria-label="Laki-laki ${l}, perempuan ${pr}"><circle cx="50" cy="50" r="40" fill="none" stroke="${cP}" stroke-width="16"/><circle cx="50" cy="50" r="40" fill="none" stroke="${cL}" stroke-width="16" stroke-dasharray="${a} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="49" text-anchor="middle" font-size="14" font-weight="700" fill="${x1}">${t}</text><text x="50" y="62" text-anchor="middle" font-size="7" fill="${x2}">warga</text></svg>
+ <div class="legend"><span><i class="dot" style="background:${cL}"></i>Laki-laki: <b>${l}</b></span><span><i class="dot" style="background:${cP}"></i>Perempuan: <b>${pr}</b></span></div>`}
 const art='<svg class="bgart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="2"><circle cx="720" cy="40" r="90"/><circle cx="720" cy="40" r="140"/><path d="M-20 150q200-90 400 0t440-30"/></g></svg>';
-const head=(t,s)=>`<header class="top abs">${art}<div class="row"><div><small>${s}</small><h1>${t}</h1></div><button class="btn ghost" style="margin:0" onclick="location.reload()">Keluar</button></div></header>`;
+const head=(t,s,x='',c='')=>`<header class="top abs">${art}<div class="row"><div><small>${s}</small><h1 class="${c}">${t}</h1></div><button class="exit" id="ex" type="button" aria-label="Keluar">${ic(EXIT,22)}</button></div>${x}</header>`;
 const form=(id,h)=>`<div class="card hide" id="${id}">${h}</div>`;
 const show=id=>document.querySelectorAll('.pnl').forEach(x=>x.classList.toggle('hide',x.id!=id));
 
-async function render(){$('#login').remove();const A=$('#app');A.classList.remove('hide');
+async function render(){$('#login').remove();inApp=true;history.pushState({a:1},'');const A=$('#app');A.classList.remove('hide');
  if(S.role=='pusat')return pusat(A);if(S.role=='kel')return kel(A);return petugas(A)}
 
 async function pusat(A){
@@ -178,38 +199,38 @@ async function counts(f){let q=sb.from('anggota').select('jk,keluarga!inner(kelu
 
 const MENU=[['Registrasi Petugas','<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/><path d="M19 8v6M16 11h6"/>','#1f6fb2'],['Pendataan','<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/>','#d9822b'],['Pemilihan','<rect x="3" y="12" width="18" height="9" rx="2"/><path d="M8 12V5l4-2 4 2v7"/><path d="M10 8h4"/>','#7b3fa0'],['Hasil Pemilihan','<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>','#c0392b']];
 async function kel(A){const [l,p]=await counts(S);
- A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'Kec. '+esc(S.kecamatan)+' · '+esc(S.kota))+`<main>
- <div class="card"><div class="stat">${donut(l,p)}</div><button class="btn alt" id="sel">Selengkapnya</button></div>
+ A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'Kec. '+esc(S.kecamatan)+' · '+esc(S.kota),`<div class="hd">${donut(l,p,104,true)}<button class="btn" id="sel">Selengkapnya</button></div>`,'ttl')+`<main>
  <div class="card"><h3 style="margin-bottom:12px">Fitur Utama</h3><div class="menu">${MENU.map(([t,k,c],i)=>`<button data-i="${i}" style="--c:${c}"><i>${ic(k,28)}</i>${t}</button>`).join('')}</div></div>
  <div class="card pnl hide" id="p0"><h3>Registrasi Petugas RT/RW</h3><div class="grid2">
-  <div><label>RW</label><select id="rw">${opts(NUM(20))}</select></div><div><label>RT</label><select id="rt">${opts(NUM(20))}</select></div>
+  <div><label>RT</label><input id="rt" class="num" inputmode="numeric" maxlength="3" placeholder="01"></div><div><label>RW</label><input id="rw" class="num" inputmode="numeric" maxlength="3" placeholder="01"></div>
   <div><label>Nomor HP</label><input id="hp" inputmode="tel"></div><div><label>Nama Petugas</label><input id="nm"></div>
-  <div><label>NIK</label><input id="nik" inputmode="numeric" maxlength="16"></div></div>
+  <div><label>NIK</label><input id="nik" class="num" inputmode="numeric" maxlength="16"></div></div>
   <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div><div class="scroll" id="ls"></div></div>
  <div class="card pnl hide" id="p1"><h3>Pendataan</h3><div class="scroll" id="kk"></div></div>
  <div class="card pnl hide" id="p2"><h3>Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
  <div class="card pnl hide" id="p3"><h3>Hasil Pemilihan</h3><p class="hint">Menunggu rincian fitur.</p></div>
  <div class="card pnl hide" id="pw"><h3>Data Warga</h3><p class="hint">Menunggu rincian data. Sementara: daftar anggota keluarga.</p><div class="scroll" id="wg"></div></div></main>`;
  document.querySelector('.menu').onclick=e=>{const bt=e.target.closest('button');if(!bt)return;const i=bt.dataset.i;document.querySelectorAll('.menu button').forEach(b=>b.classList.toggle('on',b==bt));show('p'+i);if(i==0)lp();if(i==1)lk()};
- const lp=async()=>{const {data}=await sb.from('petugas').select('*').eq('kelurahan',S.kelurahan);$('#ls').innerHTML='<table><tr><th>RW/RT</th><th>Nama</th><th>HP</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nama)}</td><td>${esc(r.hp)}</td></tr>`).join('')+'</table>'};
- const lk=async()=>{const {data}=await sb.from('keluarga').select('*').eq('kelurahan',S.kelurahan).order('rw').order('rt');$('#kk').innerHTML='<table><tr><th>RW/RT</th><th>NKK</th><th>Kepala Keluarga</th><th>Alamat</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rw}/${r.rt}</td><td>${esc(r.nkk)}</td><td>${esc(r.nama_kk)}</td><td>${esc(r.alamat)}</td></tr>`).join('')+'</table>'};
+ const lp=async()=>{const {data}=await sb.from('petugas').select('*').eq('kelurahan',S.kelurahan);$('#ls').innerHTML='<table><tr><th>RT/RW</th><th>Nama</th><th>HP</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rt}/${r.rw}</td><td>${esc(r.nama)}</td><td>${esc(r.hp)}</td></tr>`).join('')+'</table>'};
+ const lk=async()=>{const {data}=await sb.from('keluarga').select('*').eq('kelurahan',S.kelurahan).order('rw').order('rt');$('#kk').innerHTML='<table><tr><th>RT/RW</th><th>NKK</th><th>Kepala Keluarga</th><th>Alamat</th></tr>'+(data||[]).map(r=>`<tr><td>${r.rt}/${r.rw}</td><td>${esc(r.nkk)}</td><td>${esc(r.nama_kk)}</td><td>${esc(r.alamat)}</td></tr>`).join('')+'</table>'};
  $('#sel').onclick=async()=>{show('pw');const {data}=await sb.from('anggota').select('nik,nama,jk,hubungan,keluarga!inner(kelurahan,rw,rt)').eq('keluarga.kelurahan',S.kelurahan);
-  $('#wg').innerHTML='<table><tr><th>NIK</th><th>Nama</th><th>JK</th><th>RW/RT</th></tr>'+(data||[]).map(r=>`<tr><td>${esc(r.nik)}</td><td>${esc(r.nama)}</td><td>${r.jk}</td><td>${r.keluarga.rw}/${r.keluarga.rt}</td></tr>`).join('')+'</table>'};
- $('#sv').onclick=async()=>{const r={hp:$('#hp').value.trim(),nama:$('#nm').value.trim(),nik:$('#nik').value.trim(),rw:$('#rw').value,rt:$('#rt').value,kelurahan:S.kelurahan,created_by:S.hp},m=$('#m');
-  if(!r.hp||!r.nama||!r.rw||!r.rt||r.nik.length!=16){m.className='msg';m.textContent='Lengkapi isian; NIK harus 16 digit.';return}
-  const {error}=await sb.from('petugas').insert(r);m.className=error?'msg':'msg ok';m.textContent=error?error.message:'Petugas tersimpan.';if(!error)lp()}}
+  $('#wg').innerHTML='<table><tr><th>NIK</th><th>Nama</th><th>JK</th><th>RT/RW</th></tr>'+(data||[]).map(r=>`<tr><td>${esc(r.nik)}</td><td>${esc(r.nama)}</td><td>${r.jk}</td><td>${r.keluarga.rt}/${r.keluarga.rw}</td></tr>`).join('')+'</table>'};
+ $('#sv').onclick=async()=>{const r={hp:$('#hp').value.trim(),nama:$('#nm').value.trim(),nik:$('#nik').value.trim(),rw:pad($('#rw').value.trim()),rt:pad($('#rt').value.trim()),kelurahan:S.kelurahan,created_by:S.hp},m=$('#m');
+  if(!r.hp||!r.nama||!r.rw||!r.rt||r.nik.length!=16){m.className='msg';m.textContent='Lengkapi isian. RT dan RW harus angka (contoh 01 atau 10), NIK 16 digit.';return}
+  const d1=await sb.from('petugas').select('nama').eq('nik',r.nik).maybeSingle();if(d1.data){m.className='msg';m.textContent='NIK sudah terdaftar sebagai petugas ('+d1.data.nama+').';return}
+  const {error}=await sb.from('petugas').insert(r);m.className=error?'msg':'msg ok';m.textContent=error?(error.code=='23505'?'Nomor HP atau NIK sudah terdaftar.':error.message):'Petugas tersimpan.';if(!error)lp()}}
 
 function memRow(){const d=document.createElement('div');d.className='mem';d.innerHTML=`<div class="grid2">
- <div><label>NIK</label><input class="nik" inputmode="numeric" maxlength="16"></div><div><label>Nama</label><input class="nama"></div>
+ <div><label>NIK</label><input class="nik num" inputmode="numeric" maxlength="16"></div><div><label>Nama</label><input class="nama"></div>
  <div><label>Jenis Kelamin</label><select class="jk"><option value="">Pilih</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
  <div><label>Hubungan dalam Keluarga</label><select class="hub">${opts(HUB)}</select></div>
  <div><label>Tempat Lahir</label><input class="tl"></div><div><label>Tanggal Lahir</label><input class="tg" type="date"></div>
  <div><label>Pekerjaan</label><input class="pk"></div></div>`;return d}
 
 async function petugas(A){const [l,p]=await counts(S);
- A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'RW '+S.rw+' / RT '+S.rt)+`<main><div class="card"><div class="stat">${donut(l,p)}</div></div>
+ A.innerHTML=head('Kelurahan '+esc(S.kelurahan),'RT '+S.rt+' / RW '+S.rw)+`<main><div class="card"><div class="stat">${donut(l,p)}</div></div>
  <div class="card"><h3>Pendataan Keluarga</h3><div class="grid2">
- <div><label>NKK</label><input id="nkk" inputmode="numeric" maxlength="16"></div><div><label>Nama Kepala Keluarga</label><input id="nkp"></div>
+ <div><label>NKK</label><input id="nkk" class="num" inputmode="numeric" maxlength="16"></div><div><label>Nama Kepala Keluarga</label><input id="nkp"></div>
  <div><label>Alamat</label><input id="al"></div><div><label>No HP Keluarga</label><input id="hk" inputmode="tel"></div></div>
  <h3 style="margin-top:18px">Anggota Keluarga</h3><div id="ml"></div>
  <button class="btn ghost" id="add">+ Tambah anggota</button> <button class="btn" id="sv">Simpan</button><div class="msg" id="m"></div></div></main>`;
@@ -218,6 +239,9 @@ async function petugas(A){const [l,p]=await counts(S);
   const ang=[...ml.children].map(d=>({nkk,nik:d.querySelector('.nik').value.trim(),nama:d.querySelector('.nama').value.trim(),jk:d.querySelector('.jk').value,hubungan:d.querySelector('.hub').value,tempat_lahir:d.querySelector('.tl').value.trim(),tgl_lahir:d.querySelector('.tg').value||null,pekerjaan:d.querySelector('.pk').value.trim()}));
   if(nkk.length!=16||!$('#nkp').value.trim()){m.textContent='NKK harus 16 digit dan Nama KK wajib diisi.';return}
   if(ang.some(a=>a.nik.length!=16||!a.nama||!a.jk)){m.textContent='Setiap anggota wajib punya NIK 16 digit, nama, dan jenis kelamin.';return}
+  const ns=ang.map(a=>a.nik);if(new Set(ns).size<ns.length){m.textContent='Ada NIK ganda di dalam form ini.';return}
+  const dn=await sb.from('anggota').select('nik,nama').in('nik',ns);if(dn.data&&dn.data.length){m.textContent='NIK sudah terdaftar: '+dn.data.map(x=>x.nik+' ('+x.nama+')').join(', ');return}
+  const dk=await sb.from('keluarga').select('nkk').eq('nkk',nkk).maybeSingle();if(dk.data){m.textContent='NKK sudah terdaftar.';return}
   const k=await sb.from('keluarga').insert({nkk,nama_kk:$('#nkp').value.trim(),alamat:$('#al').value.trim(),hp:$('#hk').value.trim(),kelurahan:S.kelurahan,rw:S.rw,rt:S.rt,created_by:S.hp});
   if(k.error){m.textContent=k.error.message;return}
   const a=await sb.from('anggota').insert(ang);if(a.error){await sb.from('keluarga').delete().eq('nkk',nkk);m.textContent=a.error.message;return}
