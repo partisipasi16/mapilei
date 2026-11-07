@@ -12,10 +12,10 @@ h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
 .abs svg.bgart{position:absolute;inset:0;width:100%;height:100%}
 #splash{position:fixed;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:transform .9s cubic-bezier(.77,0,.18,1)}
 #splash.out{transform:translateX(100%)}
-#logo{position:relative;width:150px;height:150px;border-radius:50%;background:#fff;display:grid;place-items:center;animation:pop 1.4s ease-out both,pulse 2.4s 1.4s ease-in-out infinite}
-#logo img,#logo svg{width:80%;height:80%;object-fit:contain}
+#logo{position:relative;width:min(260px,64vw);height:min(260px,64vw);display:grid;place-items:center;animation:pop 1.4s ease-out both,pulse 2.4s 1.4s ease-in-out infinite}
+#logo img,#logo svg{width:100%;height:100%;object-fit:contain}
 @keyframes pop{from{transform:scale(.3) rotate(-90deg);opacity:0}to{transform:none;opacity:1}}
-@keyframes pulse{50%{box-shadow:0 0 0 22px #ffffff18}}
+@keyframes pulse{50%{transform:scale(1.06)}}
 #splash footer{position:absolute;bottom:28px;padding:0 24px;text-align:center;font-size:14px;max-width:460px;opacity:.9}
 #login{min-height:100vh;display:grid;place-items:center;padding:20px}
 .box{width:100%;max-width:440px;background:var(--card);border-radius:14px;padding:24px;box-shadow:0 10px 40px #0b2a4333}
@@ -33,7 +33,7 @@ main{max-width:900px;margin:0 auto;padding:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
 .stat{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .legend span{display:block;margin:4px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px}
-.lg{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;margin:0 auto 8px;box-shadow:0 0 0 3px #1d6b4533}.lg img,.lg svg{width:80%;height:80%;object-fit:contain}
+.lg{width:150px;height:150px;display:grid;place-items:center;margin:0 auto 8px}.lg img,.lg svg{width:100%;height:100%;object-fit:contain}
 .div{display:flex;align-items:center;gap:12px;color:#52666f;font-size:14px;margin:4px 0}.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
 .menu{display:flex;gap:4px;text-align:center}
 .menu button{flex:1 1 0;min-width:0;background:none;border:0;padding:6px 0;font:600 11.5px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -88,6 +88,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 #ls:not(:empty),#tls:not(:empty){border-top:1px solid var(--line);margin-top:16px;padding-top:6px}
 .vt{width:auto;min-width:100%;border:1px solid var(--line)}.vt th,.vt td{border:1px solid var(--line);white-space:nowrap;text-align:left;padding:7px 14px}.vt th{position:sticky;left:0;background:var(--paper);z-index:1}td.new{animation:fl 2.6s}
+#dw{background:none;border:0;border-radius:0;padding:0}
+#dw .rowh{padding:0 2px}
+.ht{background:#fff;border:1px solid var(--line)}.ht th{background:var(--paper);white-space:nowrap;vertical-align:top;padding:9px 12px}.ht td{padding:9px 12px;vertical-align:top}.ht td.nm,.ht td.al{min-width:150px}.ht td.ag,.ht th.ag{text-align:center;white-space:nowrap}.ht td.ak{white-space:nowrap}.ht td .sm{margin:0 4px 0 0}
+.ht .nk{display:block;font-size:12.5px;font-weight:400;color:#52666f;letter-spacing:.3px;margin-top:2px}.ht .nk .eb{color:var(--txt);padding:0 2px}
 </style></head><body>
 
 <div id="splash" class="abs">
@@ -405,10 +409,12 @@ async function petugas(A){const [l,p]=await counts(S);const tl=await getTl(S.kel
  $('#sel').onclick=()=>{const w=$('#pw');w.classList.toggle('hide');if(!w.classList.contains('hide')){listWarga($('#wg'),S,true);w.scrollIntoView({behavior:'smooth'})}};
  const DENY='Ditolak oleh database. Jalankan bagian kebijakan (policy) pada update_registrasi_warga.sql di Supabase > SQL Editor.';
  const ml=$('#ml'),strip=a=>({nkk:a.nkk,nik:a.nik,nama:a.nama,jk:a.jk,hubungan:a.hubungan,tempat_lahir:a.tempat_lahir,tgl_lahir:a.tgl_lahir,pekerjaan:a.pekerjaan});
- let kk=[],ed=null,old=[],base='';
+ let kk=[],ed=null,old=[],base='',nikV=false;
  // --- Daftar Warga: hanya kepala keluarga (satu baris per NKK)
- const tbl=()=>{const tc=f=>kk.map((r,i)=>`<td${r.nkk==hlKK?' class="new"':''}>${f(r,i)}</td>`).join('');
-  $('#kl').innerHTML=kk.length?'<table class="vt"><tr><th>Nama KK</th>'+tc(r=>esc(r.nama_kk))+'</tr><tr><th>Alamat</th>'+tc(r=>esc(r.alamat||'-'))+'</tr><tr><th>Anggota Keluarga</th>'+tc(r=>r.anggota&&r.anggota[0]?r.anggota[0].count:'-')+'</tr><tr><th>Aksi</th>'+tc((r,i)=>`<button class="btn alt sm" data-e="${i}">Edit</button><button class="btn del sm" data-d="${i}">Hapus</button>`)+'</tr></table>':'<p class="hint">Belum ada data warga. Tekan Tambah Data untuk mulai.</p>'};
+ const tbl=()=>{
+  const mk='*'.repeat(16),eye=`<button class="eb" id="ke" type="button" aria-label="${nikV?'Sembunyikan':'Tampilkan'} NIK">${ic(nikV?EYEOFF:EYE,16)}</button>`;
+  $('#kl').innerHTML=kk.length?`<table class="ht"><tr><th>Nama Warga<span class="nk">NIK ${eye}</span></th><th>Alamat</th><th class="ag">Agt. Kel.</th><th>Aksi</th></tr>`+kk.map((r,i)=>`<tr${r.nkk==hlKK?' class="new"':''}><td class="nm">${esc(r.nama_kk)}<span class="nk">${nikV?esc(r.nik_kk||'-'):mk}</span></td><td class="al">${esc(r.alamat||'-')}</td><td class="ag">${r.anggota&&r.anggota[0]?r.anggota[0].count:'-'}</td><td class="ak"><button class="btn alt sm" data-e="${i}">Edit</button><button class="btn del sm" data-d="${i}">Hapus</button></td></tr>`).join('')+'</table>':'<p class="hint">Belum ada data warga. Tekan Tambah Data untuk mulai.</p>';
+  const ke=$('#ke');if(ke)ke.onclick=e=>{e.stopPropagation();nikV=!nikV;tbl()}};
  const loadKk=async()=>{const q=c=>sb.from('keluarga').select(c).eq('kelurahan',S.kelurahan).eq('rw',S.rw).eq('rt',S.rt).order('nama_kk').limit(500);
   let r=await q('nkk,nama_kk,nik_kk,alamat,hp,anggota(count)');if(r.error)r=await q('nkk,nama_kk,nik_kk,alamat,hp');
   kk=r.data||[];if(r.error)$('#kl').innerHTML='<p class="msg">'+esc(r.error.message)+'</p>';else tbl()};
