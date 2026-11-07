@@ -63,7 +63,8 @@ select:disabled,input:disabled{background:#eef2f1;cursor:not-allowed;color:#8a9a
 textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font:inherit}.pv{width:90px;height:90px;object-fit:cover;border-radius:10px;margin-top:8px}
 .eb{background:none;border:0;color:#fff;cursor:pointer;vertical-align:middle;padding:0 4px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.tabs{gap:4px}.tabs button{font-size:11px;padding:9px 0}.grid2{grid-template-columns:1fr}}
-@media(max-width:430px){.menu button{font-size:10.5px}}
+@media(max-width:430px){.menu button{font-size:10.5px}#menu button{font-size:10.5px}}
+#menu{margin:0}
 .mem{border:1px dashed var(--teal);border-radius:10px;padding:4px 12px 14px;margin-top:12px}
 .mem .mh{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.mem .mh b{font-size:14px}
 .rowh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.rowh .btn{margin:0}
@@ -81,7 +82,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
 .cc img{width:84px;height:84px;border-radius:50%;object-fit:cover;background:#d5e0de}
 .cc em{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;display:none;place-items:center}
 .cc[aria-pressed=true]{border-color:var(--teal);background:#eaf5ee;box-shadow:0 0 0 2px #1d6b4540}.cc[aria-pressed=true] em{display:grid}
-.thx{display:flex;gap:12px;align-items:flex-start;background:#eaf5ee;border:1px solid #b9dcc6;border-radius:12px;padding:16px;margin-bottom:16px}.thx i{flex:none;width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center}.thx p{margin:4px 0 0}
+.thx{display:flex;gap:12px;align-items:flex-start;background:#eaf5ee;border:1px solid #b9dcc6;border-radius:12px;padding:16px;margin-bottom:16px}.thx i{flex:none;width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center}.thx p{margin:4px 0 0}.thx>div{min-width:0}.thx .pil{display:grid;grid-template-columns:auto auto 1fr;gap:3px 8px;margin:6px 0 0}.thx .pil b{font-weight:600}.thx .info{font-size:12.5px;font-style:italic;color:#52666f;margin-top:10px}
 .cel{background:linear-gradient(135deg,#0a3322,#1d6b45);color:#fff;border-radius:12px;padding:20px 16px;margin-bottom:16px;text-align:center}.cel h2{font-size:24px;color:var(--gold)}.cel p{margin:6px 0 16px;opacity:.9}.cel .hint{color:#ffffffcc}
 .cel .row2{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}.win{flex:1 1 130px}.win small{display:block;opacity:.85;margin-bottom:8px}.win img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:#fff}.win b{display:block;margin-top:8px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -105,7 +106,6 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
   <form id="lf" novalidate>
    <label for="u">Username</label><input id="u" autocomplete="username">
    <label for="p">Password</label><div class="pw"><input id="p" type="password" autocomplete="current-password"><button type="button" class="eye" data-t="p" aria-label="Tampilkan password"></button></div>
-   <div class="hint" id="lh"></div>
    <button class="btn alt" id="go" type="submit" style="width:100%">Masuk</button>
   </form>
   <form id="rf" class="hide" novalidate>
@@ -152,7 +152,6 @@ window.addEventListener('popstate',()=>{if(inApp){history.pushState({a:1},'');as
 $('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button type="button" data-r="${k}" style="--c:${COL[k]}">${ic(IC[k])}${v}</button>`).join('');
 function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.r==r));
  $('#u').placeholder=r!='pusat'?'Nomor HP terdaftar':'Username';
- $('#lh').textContent=r!='pusat'?'Login pertama: Anda akan diminta membuat password sendiri.':'';
  $('#lf').classList.remove('hide');$('#rf').classList.add('hide');$('#lm').textContent=''}
 $('#tabs').onclick=e=>{const b=e.target.closest('button');if(b){setRole(b.dataset.r);$('#u').focus()}};setRole('pusat');
 document.querySelectorAll('#tabs button').forEach(b=>{if(b.dataset.r=='petugas'||b.dataset.r=='user')b.hidden=true});
@@ -236,6 +235,7 @@ async function pusat(A){
  lock();load()}
 
 async function counts(f,byRt=true){const c=async jk=>{let q=sb.from('anggota').select('nik,keluarga!inner(kelurahan,rw,rt)',{count:'exact',head:true}).eq('jk',jk).eq('keluarga.kelurahan',f.kelurahan);if(f.rw){q=q.eq('keluarga.rw',f.rw);if(byRt)q=q.eq('keluarga.rt',f.rt)}const {count}=await q;return count||0};return [await c('L'),await c('P')]}
+function fmtJam(v){const d=new Date(v);if(isNaN(d))return '';const o={timeZone:'Asia/Makassar'};return d.toLocaleDateString('id-ID',{...o,day:'numeric',month:'short',year:'numeric'})+', '+d.toLocaleTimeString('id-ID',{...o,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' WITA'}
 function fmtD(d){const x=d.split('-');return x[2]+'/'+x[1]}
 function dt(d,j,end){return new Date(d+'T'+(j?j.slice(0,5)+':00':(end?'23:59:59':'00:00:00')))}
 function aktif(t){const n=new Date();return n>=dt(t.tgl_awal,t.jam_awal)&&n<=dt(t.tgl_akhir,t.jam_akhir,1)}
@@ -259,7 +259,7 @@ function tlHtml(rows){if(!rows.length)return '<p class="hint">Timeline belum dit
   return `<li class="${cls}"><span class="nm">${esc(t.nama)}</span><b>${i+1}</b><small>${fmtD(t.tgl_awal)}–${fmtD(t.tgl_akhir)}</small>${n?`<i style="--f:${f}%"></i>`:''}</li>`}).join('')+'</ol></div>'}
 const tlCard=h=>`<div class="card"><h3 style="margin-bottom:12px">Timeline</h3><div id="tlc">${h}</div></div>`;
 const tlFlat=h=>`<section class="flat"><h3>Timeline</h3><div id="tlc">${h}</div></section>`;
-const menuHtml=(M,rows)=>{const cur=curKinds(rows);return `<section class="flat"><h3>Fitur Utama</h3><div class="menu" id="menu">${M.map(([k,t,i,c])=>`<button type="button" data-k="${k}" style="--c:${c}"${k=='tahapan'||cur.has(UN[k])?'':' hidden'}><i>${ic(i,23)}</i>${t}</button>`).join('')}</div></section>`};
+const menuHtml=(M,rows)=>{const cur=curKinds(rows);return `<section class="flat"><h3>Fitur Utama</h3><div class="tabs" id="menu">${M.map(([k,t,i,c])=>`<button type="button" data-k="${k}" style="--c:${c}"${k=='tahapan'||cur.has(UN[k])?'':' hidden'}>${ic(i)}${t}</button>`).join('')}</div></section>`};
 const menuVis=rows=>{const cur=curKinds(rows);document.querySelectorAll('#menu button').forEach(b=>{b.hidden=!(b.dataset.k=='tahapan'||cur.has(UN[b.dataset.k]))})};
 const bindMenu=cb=>{$('#menu').onclick=e=>{const bt=e.target.closest('button');if(!bt)return;document.querySelectorAll('#menu button').forEach(b=>b.classList.toggle('on',b==bt));cb(bt.dataset.k)}};
 async function listWarga(el,f,nik){el.innerHTML='Memuat...';let q=sb.from('anggota').select('nik,nama,jk,keluarga!inner(kelurahan,rw,rt)').eq('keluarga.kelurahan',f.kelurahan);if(f.rw){q=q.eq('keluarga.rw',f.rw);if(f.rt)q=q.eq('keluarga.rt',f.rt)}
@@ -290,7 +290,7 @@ async function kel(A){const [l,p]=await counts(S);const tl=await getTl(S.kelurah
  <div class="card pnl hide" id="pw"><h3>Data Warga</h3><div class="scroll" id="wg"></div></div></main>`;
  bindMenu(async k=>{show('p_'+k);
   if(k=='pendata'){lp();$('#rt').focus()}
-  if(k=='tahapan'){lt();$('#tn').focus()}
+  if(k=='tahapan'){lt()}
   if(k=='pendataan'){$('#drt').focus();await pair('d',showData);$('#dres').innerHTML='<p class="hint">Pilih RT dan RW untuk melihat jumlah warga.</p>'}
   if(k=='pencalonan'){$('#crt').focus();await pair('c',()=>{loadCalon('RW');loadCalon('RT')});loadCalon('RW');loadCalon('RT')}
   if(k=='pemilihan'){$('#hrt').focus();await pair('h',showHasil);$('#hres').innerHTML=''}});
@@ -319,7 +319,7 @@ async function kel(A){const [l,p]=await counts(S);const tl=await getTl(S.kelurah
  let tr=[],ted=null;
  const lt=async()=>{tr=await getTl(S.kelurahan);$('#tlc').innerHTML=tlHtml(tr);menuVis(tr);
   $('#tls').innerHTML='<table><tr><th>No</th><th>Tahapan</th><th>Tanggal</th><th>Waktu</th><th>Aksi</th></tr>'+tr.map((t,i)=>`<tr><td>${i+1}</td><td>${esc(t.nama)}</td><td>${fmtD(t.tgl_awal)}–${fmtD(t.tgl_akhir)}</td><td>${t.jam_awal?t.jam_awal.slice(0,5):'-'}–${t.jam_akhir?t.jam_akhir.slice(0,5):'-'}</td><td style="white-space:nowrap"><button class="btn alt sm" data-e="${i}">Edit</button><button class="btn del sm" data-d="${i}">Hapus</button></td></tr>`).join('')+'</table>'};
- const treset=()=>{ted=null;['tn','ta','tb','ja','jb'].forEach(i=>$('#'+i).value='');$('#tsv').textContent='Simpan';$('#tcx').classList.add('hide');$('#tt').textContent='Timeline Tahapan';$('#tn').focus()};
+ const treset=()=>{ted=null;['tn','ta','tb','ja','jb'].forEach(i=>$('#'+i).value='');$('#tsv').textContent='Simpan';$('#tcx').classList.add('hide');$('#tt').textContent='Timeline Tahapan'};
  $('#tcx').onclick=()=>{treset();$('#tm').textContent=''};
  $('#tls').onclick=e=>{const b=e.target.closest('button');if(!b)return;const m=$('#tm');
   if(b.dataset.e!=null){const t=tr[b.dataset.e];ted=t.id;$('#tn').value=t.nama;$('#ta').value=t.tgl_awal;$('#tb').value=t.tgl_akhir;$('#ja').value=t.jam_awal?t.jam_awal.slice(0,5):'';$('#jb').value=t.jam_akhir?t.jam_akhir.slice(0,5):'';$('#tsv').textContent='Perbarui';$('#tcx').classList.remove('hide');$('#tt').textContent='Edit Tahapan';m.textContent='';$('#p_tahapan').scrollIntoView({behavior:'smooth'});$('#tn').focus()}
@@ -489,8 +489,8 @@ async function warga(A){const [l,p]=await counts(S,false);const tl=await getTl(S
   return `<div class="win"><small>${t}</small><img src="${esc(w[0].foto_url)}" alt="Foto ${esc(w[0].nama)}"><b>${esc(w[0].nama)}</b></div>`};
  if(phase=='belum')sect='<div class="card"><p class="hint">Tahapan pemilihan belum dimulai.</p></div>';
  else if(phase=='aktif'){
-  if(st.sudah){const pt=[st.rt&&'calon RT <b>'+esc(st.rt)+'</b>',st.rw&&'Calon RW <b>'+esc(st.rw)+'</b>'].filter(Boolean).join(' dan ');
-   sect=`<div class="thx" id="thx"><i>${ic('<path d="M5 12l5 5 9-10"/>',24)}</i><div><b>Terima kasih!!</b><p>Anda telah memilih ${pt}. Informasi hasil pemilihan akan ditampilkan setelah tahapan pemilihan selesai.</p></div></div>`}
+  if(st.sudah){const pil=[st.rt&&'<span>Calon RT</span><span>:</span><b>'+esc(st.rt)+'</b>',st.rw&&'<span>Calon RW</span><span>:</span><b>'+esc(st.rw)+'</b>',st.jam&&fmtJam(st.jam)&&'<span>Jam</span><span>:</span><span>'+esc(fmtJam(st.jam))+'</span>'].filter(Boolean).join('');
+   sect=`<div class="thx" id="thx"><i>${ic('<path d="M5 12l5 5 9-10"/>',24)}</i><div><b>Terima Kasih!!</b><p>Anda telah memilih:</p><div class="pil">${pil}</div><p class="info">Informasi hasil pemilihan akan ditampilkan setelah tahapan pemilihan selesai.</p></div></div>`}
   else sect=`<div class="card" id="vt"><h3>Pemilihan</h3><p class="hint">Pilih satu calon RT dan satu calon RW, lalu tekan Kirim Suara. Satu keluarga hanya memiliki satu suara.</p>${blk('RT',rtL,'Calon Ketua RT '+esc(S.rt))}${blk('RW',rwL,'Calon Ketua RW '+esc(S.rw))}${rtL.length||rwL.length?'<button class="btn" id="vs" type="button" disabled>Kirim Suara</button>':''}</div>`}
  else if(since>TERPILIH_JAM*36e5)sect='<div class="card"><p>Pemilihan telah selesai. Terima kasih atas partisipasi Anda.</p></div>';
  else if(!rk)sect='<div class="card"><p class="hint">Hasil pemilihan belum dapat dimuat.</p></div>';
