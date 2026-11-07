@@ -16,7 +16,7 @@ h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0}
 #logo img,#logo svg{width:100%;height:100%;object-fit:contain}
 @keyframes pop{from{transform:scale(.3) rotate(-90deg);opacity:0}to{transform:none;opacity:1}}
 @keyframes pulse{50%{transform:scale(1.06)}}
-#splash footer{position:absolute;bottom:28px;padding:0 24px;text-align:center;font-size:14px;max-width:460px;opacity:.9}
+#splash footer{position:absolute;bottom:28px;left:0;right:0;padding:0 10px;text-align:center;font-size:clamp(9.5px,2.9vw,13px);white-space:nowrap;opacity:.9}#splash footer b{font-size:clamp(11px,3.4vw,14px)}
 #login{min-height:100vh;display:grid;place-items:center;padding:20px}
 .box{width:100%;max-width:440px;background:var(--card);border-radius:14px;padding:24px;box-shadow:0 10px 40px #0b2a4333}
 label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
@@ -33,7 +33,7 @@ main{max-width:900px;margin:0 auto;padding:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
 .stat{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .legend span{display:block;margin:4px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px}
-.lg{width:150px;height:150px;display:grid;place-items:center;margin:0 auto}#login .box{padding-top:6px}#login .div{margin:0 0 4px}.lg img,.lg svg{width:100%;height:100%;object-fit:contain}
+.lg{width:150px;height:150px;display:grid;place-items:center;margin:-14px auto -18px}#login .box{padding-top:0}#login .div{margin:0}.lg img,.lg svg{width:100%;height:100%;object-fit:contain}
 .div{display:flex;align-items:center;gap:12px;color:#52666f;font-size:14px;margin:4px 0}.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
 .menu{display:flex;gap:4px;text-align:center}
 .menu button{flex:1 1 0;min-width:0;background:none;border:0;padding:6px 0;font:600 11.5px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -101,7 +101,7 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
   <g fill="#eaa63c" fill-opacity=".35"><circle cx="680" cy="90" r="14"/><circle cx="90" cy="500" r="10"/><rect x="560" y="300" width="26" height="26" transform="rotate(25 573 313)"/></g>
  </svg>
  <div id="logo"><img src="https://res.cloudinary.com/q7sznixw/image/upload/v1794031317/pilei_1_if8flb.webp" alt="Logo Klik Foto" onerror="fb(this)"></div>
- <footer>Platform digital untuk pemilihan Ketua RT/RW tingkat Kelurahan.<br>Versi 2.10 &copy; 2026</footer>
+ <footer>Platform digital untuk pemilihan Ketua RT/RW tingkat Kelurahan.<br><b>Versi 2.10 &copy; 2026</b></footer>
 </div>
 
 <section id="login" class="abs">
