@@ -33,7 +33,7 @@ main{max-width:900px;margin:0 auto;padding:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
 .stat{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .legend span{display:block;margin:4px 0}.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px}
-.lg{width:150px;height:150px;display:grid;place-items:center;margin:0 auto 8px}.lg img,.lg svg{width:100%;height:100%;object-fit:contain}
+.lg{width:150px;height:150px;display:grid;place-items:center;margin:0 auto}#login .box{padding-top:6px}#login .div{margin:0 0 4px}.lg img,.lg svg{width:100%;height:100%;object-fit:contain}
 .div{display:flex;align-items:center;gap:12px;color:#52666f;font-size:14px;margin:4px 0}.div::before,.div::after{content:"";flex:1;height:1px;background:var(--line)}
 .menu{display:flex;gap:4px;text-align:center}
 .menu button{flex:1 1 0;min-width:0;background:none;border:0;padding:6px 0;font:600 11.5px/1.2 inherit;font-family:inherit;color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -50,6 +50,7 @@ select:disabled,input:disabled{background:#eef2f1;cursor:not-allowed;color:#8a9a
 @keyframes fl{from{background:#ffe3a0}to{background:transparent}}tr.new td{animation:fl 2.6s}
 .tabs{display:flex;gap:6px;margin:14px 0}
 .tabs button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 2px;border:1.5px solid var(--c);color:var(--c);background:#fff;border-radius:12px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+#tabs button{gap:8px;padding:20px 2px;font-size:15px}
 .tabs button.on{background:var(--c);color:#fff}.tabs button[hidden]{display:none}
 .dua{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .tl{position:relative}.tl ol{display:flex;flex-wrap:wrap;list-style:none;margin:0;padding:0 14px 4px;width:100%}.tl li{flex:1 1 88px;min-width:88px;text-align:center;position:relative;margin-bottom:18px}.tl li.brk>i{display:none}.tl svg.tu{position:absolute;left:0;top:0;pointer-events:none;z-index:0;overflow:visible}
@@ -62,7 +63,7 @@ select:disabled,input:disabled{background:#eef2f1;cursor:not-allowed;color:#8a9a
 .bar{height:12px;background:#e3ebe9;border-radius:6px;overflow:hidden;margin:5px 0 3px}.bar span{display:block;height:100%;background:var(--teal)}
 textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font:inherit}.pv{width:90px;height:90px;object-fit:cover;border-radius:10px;margin-top:8px}
 .eb{background:none;border:0;color:#fff;cursor:pointer;vertical-align:middle;padding:0 4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.tabs{gap:4px}.tabs button{font-size:12px;padding:13px 0}.grid2{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media(max-width:560px){.tabs{gap:4px}.tabs button{font-size:12px;padding:13px 0}#tabs button{font-size:13.5px;padding:18px 0}.grid2{grid-template-columns:1fr}}
 @media(max-width:430px){.menu button{font-size:10.5px}#menu button{font-size:11.5px}}
 #menu{margin:0}
 .mem{border:1px dashed var(--teal);border-radius:10px;padding:4px 12px 14px;margin-top:12px}
@@ -100,14 +101,14 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;p
   <g fill="#eaa63c" fill-opacity=".35"><circle cx="680" cy="90" r="14"/><circle cx="90" cy="500" r="10"/><rect x="560" y="300" width="26" height="26" transform="rotate(25 573 313)"/></g>
  </svg>
  <div id="logo"><img src="https://res.cloudinary.com/q7sznixw/image/upload/v1794031317/pilei_1_if8flb.webp" alt="Logo Klik Foto" onerror="fb(this)"></div>
- <footer>Platform digital pendataan untuk pemilihan Ketua RT dan Ketua RW tingkat Kelurahan</footer>
+ <footer>Platform digital untuk pemilihan Ketua RT/RW tingkat Kelurahan.<br>Versi 2.10 &copy; 2026</footer>
 </div>
 
 <section id="login" class="abs">
  <svg class="bgart" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="2"><circle cx="700" cy="80" r="130"/><circle cx="80" cy="540" r="160"/></g></svg>
  <div class="box" style="position:relative">
   <div class="lg"><img src="https://res.cloudinary.com/q7sznixw/image/upload/v1794031317/pilei_1_if8flb.webp" alt="Logo" onerror="fb(this)"></div>
-  <div class="div">Login sebagai...</div>
+  <div class="div">Login sebagai</div>
   <div class="tabs" id="tabs"></div>
   <form id="lf" novalidate>
    <label for="u">Username</label><input id="u" autocomplete="username">
@@ -155,7 +156,7 @@ function askConfirm(t,x,yes,lbl='Hapus'){if($('#xm'))return;const d=document.cre
 let inApp=false;
 function askExit(){if($('#xm'))return;const d=document.createElement('div');d.id='xm';d.className='modal';d.innerHTML='<div class="mb" role="dialog" aria-modal="true"><h3>Keluar dari akun?</h3><p>Anda akan kembali ke halaman login.</p><button class="btn ghost" id="xn">Batal</button> <button class="btn del" id="xy">Keluar</button></div>';document.body.append(d);$('#xn').onclick=()=>d.remove();$('#xy').onclick=()=>{inApp=false;location.reload()}}
 window.addEventListener('popstate',()=>{if(inApp){history.pushState({a:1},'');askExit()}});
-$('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button type="button" data-r="${k}" style="--c:${COL[k]}">${ic(IC[k])}${v}</button>`).join('');
+$('#tabs').innerHTML=Object.entries(ROLES).map(([k,v])=>`<button type="button" data-r="${k}" style="--c:${COL[k]}">${ic(IC[k],28)}${v}</button>`).join('');
 function setRole(r){role=r;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.r==r));
  $('#u').placeholder=r!='pusat'?'Nomor HP terdaftar':'Username';
  $('#lf').classList.remove('hide');$('#rf').classList.add('hide');$('#lm').textContent=''}
