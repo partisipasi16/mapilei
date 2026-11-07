@@ -240,7 +240,7 @@ function fmtD(d){const x=d.split('-');return x[2]+'/'+x[1]}
 function dt(d,j,end){return new Date(d+'T'+(j?j.slice(0,5)+':00':(end?'23:59:59':'00:00:00')))}
 function aktif(t){const n=new Date();return n>=dt(t.tgl_awal,t.jam_awal)&&n<=dt(t.tgl_akhir,t.jam_akhir,1)}
 function kind(t){const n=(t.nama||'').toLowerCase();return n.includes('data')?'pendataan':/calon|kandidat/.test(n)?'pencalonan':/ilih|voting|coblos/.test(n)?'pemilihan':''}
-const UN={pendata:'pendataan',pendataan:'pendataan',pencalonan:'pencalonan',pemilihan:'pemilihan'},HASIL_JAM=24,TERPILIH_JAM=72;
+const UN={pendata:'pendataan',pendataan:'pendataan',pencalonan:'pencalonan',pemilihan:'pemilihan'},TERPILIH_JAM=72;
 function tStart(t){return dt(t.tgl_awal,t.jam_awal)}
 function tEnd(t){return dt(t.tgl_akhir,t.jam_akhir,1)}
 function curKinds(rows){const n=new Date();let r=rows.filter(t=>n>=tStart(t)&&n<=tEnd(t));
@@ -492,13 +492,12 @@ async function warga(A){const [l,p]=await counts(S,false);const tl=await getTl(S
   if(st.sudah){const pil=[st.rt&&'<span>Calon RT</span><span>:</span><b>'+esc(st.rt)+'</b>',st.rw&&'<span>Calon RW</span><span>:</span><b>'+esc(st.rw)+'</b>',st.jam&&fmtJam(st.jam)&&'<span>Jam</span><span>:</span><span>'+esc(fmtJam(st.jam))+'</span>'].filter(Boolean).join('');
    sect=`<div class="thx" id="thx"><i>${ic('<path d="M5 12l5 5 9-10"/>',24)}</i><div><b>Terima Kasih!!</b><p>Anda telah memilih:</p><div class="pil">${pil}</div><p class="info">Informasi hasil pemilihan akan ditampilkan setelah tahapan pemilihan selesai.</p></div></div>`}
   else sect=`<div class="card" id="vt"><h3>Pemilihan</h3><p class="hint">Pilih satu calon RT dan satu calon RW, lalu tekan Kirim Suara. Satu keluarga hanya memiliki satu suara.</p>${blk('RT',rtL,'Calon Ketua RT '+esc(S.rt))}${blk('RW',rwL,'Calon Ketua RW '+esc(S.rw))}${rtL.length||rwL.length?'<button class="btn" id="vs" type="button" disabled>Kirim Suara</button>':''}</div>`}
- else if(since>TERPILIH_JAM*36e5)sect='<div class="card"><p>Pemilihan telah selesai. Terima kasih atas partisipasi Anda.</p></div>';
  else if(!rk)sect='<div class="card"><p class="hint">Hasil pemilihan belum dapat dimuat.</p></div>';
  else{const vm={};[...(rk.rt||[]),...(rk.rw||[])].forEach(x=>vm[x.id]=x.n);
   const wv=cal.map(x=>({...x,suara:vm[x.id]||0})),rl=wv.filter(x=>x.jenis=='RT'),wl=wv.filter(x=>x.jenis=='RW');
   const a=terp('Ketua RT '+esc(S.rt),rl),b=terp('Ketua RW '+esc(S.rw),wl);
-  if(a||b)sect+=`<div class="cel" id="cel"><h2>Selamat!</h2><p>Selamat kepada calon terpilih. Terima kasih atas partisipasi seluruh warga.</p><div class="row2">${a}${b}</div></div>`;
-  if(since<=HASIL_JAM*36e5)sect+=`<div class="card" id="hsl"><h3>Informasi Hasil Pemilihan</h3>${hasil('Calon Ketua RT '+esc(S.rt),rl,stat3(rk.rt_kk,rk.rt_memilih))}${hasil('Calon Ketua RW '+esc(S.rw),wl,stat3(rk.rw_kk,rk.rw_memilih))}</div>`;
+  if(since<=TERPILIH_JAM*36e5&&(a||b))sect+=`<div class="cel" id="cel"><h2>Selamat!</h2><p>Selamat kepada calon terpilih. Terima kasih atas partisipasi seluruh warga.</p><div class="row2">${a}${b}</div></div>`;
+  sect+=`<div class="card" id="hsl"><h3>Informasi Hasil Pemilihan</h3>${hasil('Calon Ketua RT '+esc(S.rt),rl,stat3(rk.rt_kk,rk.rt_memilih))}${hasil('Calon Ketua RW '+esc(S.rw),wl,stat3(rk.rw_kk,rk.rw_memilih))}</div>`;
   if(!sect)sect='<div class="card"><p>Pemilihan telah selesai. Terima kasih atas partisipasi Anda.</p></div>'}
  A.innerHTML=head(esc(S.nama_kk),'NIK <span id="nk">'+mask+'</span><button class="eb" id="ne" type="button" aria-label="Tampilkan NIK">'+ic(EYE,18)+'</button>',`<div class="hd">${donut(l,p,104,true)}<button class="btn" id="sel">Selengkapnya</button></div>`,'ttl')+`<main>${tlCard(tlHtml(tl))}${sect}
  <div class="card"><h3>Anggota Keluarga</h3><div class="scroll"><table><tr><th>Nama</th><th>Hubungan</th><th>JK</th></tr>${(data||[]).map(r=>`<tr><td>${esc(r.nama)}</td><td>${esc(r.hubungan||'')}</td><td>${r.jk}</td></tr>`).join('')}</table></div></div>
