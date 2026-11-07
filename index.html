@@ -463,21 +463,15 @@ async function petugas(A){const [l,p]=await counts(S);const tl=await getTl(S.kel
 function voteFlow(pick,nm,done){
  if($('#xm'))return;const d=document.createElement('div');d.id='xm';d.className='modal';document.body.append(d);
  const ln=[pick.RT&&'Calon Ketua RT: <b>'+esc(nm[pick.RT])+'</b>',pick.RW&&'Calon Ketua RW: <b>'+esc(nm[pick.RW])+'</b>'].filter(Boolean).join('<br>');
- const send=async()=>{const r=await sb.functions.invoke('kirim-otp',{body:{nkk:S.nkk}});return r.error||!r.data?{ok:false,msg:'Layanan OTP belum aktif atau tidak dapat dihubungi.'}:r.data};
- const step1=()=>{d.innerHTML=`<div class="mb" role="dialog" aria-modal="true"><h3>Konfirmasi Pilihan</h3><p>${ln}</p><p class="hint">Satu keluarga (NKK) hanya dapat memilih satu kali dan pilihan tidak dapat diubah. Kode OTP akan dikirim ke nomor HP keluarga.</p><div class="msg" id="om"></div><button class="btn ghost" id="oc" type="button">Batal</button> <button class="btn alt" id="os" type="button">Kirim Kode OTP</button></div>`;
-  $('#oc').onclick=()=>d.remove();
-  $('#os').onclick=async()=>{const b=$('#os');b.disabled=true;$('#om').textContent='Mengirim kode...';const r=await send();b.disabled=false;if(!r.ok){$('#om').textContent=r.msg;return}step2(r)}};
- const step2=i=>{d.innerHTML=`<div class="mb" role="dialog" aria-modal="true"><h3>Masukkan Kode OTP</h3><p>Kode 6 digit telah dikirim ke WhatsApp ${esc(i.hp)}.</p>${i.uji?`<p class="hint"><b>MODE UJI</b> · kode: ${esc(i.kode)}</p>`:''}<input id="oi" class="num" inputmode="numeric" maxlength="6" autocomplete="one-time-code" aria-label="Kode OTP" style="text-align:center;letter-spacing:8px;font-size:22px"><div class="msg" id="om"></div><button class="btn ghost" id="oc" type="button">Batal</button> <button class="btn alt" id="ov" type="button">Kirim Suara</button><div><button class="btn ghost sm" id="orr" type="button" style="margin-top:12px" disabled>Kirim ulang kode (60)</button></div></div>`;
-  $('#oi').focus();$('#oc').onclick=()=>d.remove();
-  let t=60;const rr=$('#orr'),iv=setInterval(()=>{if(!rr.isConnected){clearInterval(iv);return}t--;rr.textContent=t>0?'Kirim ulang kode ('+t+')':'Kirim ulang kode';if(t<=0){rr.disabled=false;clearInterval(iv)}},1000);
-  rr.onclick=async()=>{rr.disabled=true;const r=await send();if(!r.ok){$('#om').textContent=r.msg;rr.disabled=false;return}step2(r)};
-  $('#ov').onclick=async()=>{const k=$('#oi').value.trim(),m=$('#om'),b=$('#ov');if(k.length!=6){m.textContent='Masukkan 6 digit kode OTP.';return}
-   b.disabled=true;m.textContent='Memeriksa...';
-   const r=await sb.rpc('beri_suara',{p_nkk:S.nkk,p_kode:k,p_rt:pick.RT?+pick.RT:null,p_rw:pick.RW?+pick.RW:null});
-   b.disabled=false;if(r.error||!r.data){m.textContent=r.error?r.error.message:'Gagal menyimpan suara.';return}
-   if(!r.data.ok){m.textContent=r.data.msg;return}
-   d.remove();done()}};
- step1()}
+ d.innerHTML=`<div class="mb" role="dialog" aria-modal="true"><h3>Konfirmasi Pilihan</h3><p>${ln}</p><p class="hint">Satu keluarga (NKK) hanya dapat memilih satu kali dan pilihan tidak dapat diubah.</p>
+  <label style="display:flex;gap:8px;align-items:flex-start;text-align:left;font-weight:400;cursor:pointer"><input type="checkbox" id="ck" style="width:auto;margin-top:4px"><span>Saya yakin dengan pilihan ini.</span></label>
+  <div class="msg" id="om"></div><button class="btn ghost" id="oc" type="button">Batal</button> <button class="btn alt" id="ov" type="button" disabled>Kirim Suara</button></div>`;
+ $('#oc').onclick=()=>d.remove();
+ $('#ck').onchange=()=>{$('#ov').disabled=!$('#ck').checked};
+ $('#ov').onclick=async()=>{const m=$('#om'),b=$('#ov');b.disabled=true;$('#ck').disabled=true;m.textContent='Menyimpan suara...';
+  const r=await sb.rpc('beri_suara',{p_nkk:S.nkk,p_rt:pick.RT?+pick.RT:null,p_rw:pick.RW?+pick.RW:null});
+  if(r.error||!r.data||!r.data.ok){m.textContent=r.error?r.error.message:(r.data&&r.data.msg)||'Gagal menyimpan suara.';$('#ck').disabled=false;b.disabled=!$('#ck').checked;return}
+  d.remove();done()}}
 
 async function warga(A){const [l,p]=await counts(S,false);const tl=await getTl(S.kelurahan);const {data}=await sb.from('anggota').select('nama,hubungan,jk').eq('nkk',S.nkk);
  const mask='*'.repeat(16);let vis=false;
